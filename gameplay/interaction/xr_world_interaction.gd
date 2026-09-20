@@ -49,6 +49,8 @@ func _collect_drop(drop: XRGptItemDrop) -> void:
 		return
 	var instance := XRGptItemInstance.new()
 	instance.definition_id = drop.item_id
+	instance.display_name = drop.item_name
+	instance.category = "Blocks"
 	instance.quantity = drop.quantity
 	instance.owner_id = player_id
 	instance.first_claim_available = drop.first_claim_available
