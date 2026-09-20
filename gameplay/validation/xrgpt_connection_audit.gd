@@ -44,6 +44,10 @@ static func _check_catalog(errors: Array[String]) -> void:
 				errors.append("GENERATED_VISUAL_MISSING: " + definition.item_id)
 			if generated.get_node_or_null("CollisionShape3D") == null:
 				errors.append("GENERATED_COLLISION_MISSING: " + definition.item_id)
+			if not generated.has_method("pick_up") or not generated.has_method("can_pick_up"):
+				errors.append("GENERATED_PICKUP_API_MISSING: " + definition.item_id)
+			if generated.collision_layer & 4 == 0:
+				errors.append("GENERATED_PICKUP_LAYER_MISMATCH: " + definition.item_id)
 			generated.free()
 
 static func _check_main_connections(root: Node, errors: Array[String]) -> void:
