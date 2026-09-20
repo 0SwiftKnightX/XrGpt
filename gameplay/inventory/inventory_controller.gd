@@ -48,6 +48,12 @@ func _on_left_controller_button_pressed(action_name: String) -> void:
 func add_item_instance(instance: XRGptItemInstance) -> bool:
 	if instance == null:
 		return false
+	var existing_slot := _find_slot_for_instance(instance)
+	if existing_slot != null:
+		if not items.has(instance):
+			items.append(instance)
+		item_added.emit(instance, existing_slot)
+		return true
 	for slot in _slots:
 		if slot.item == null and slot.set_item(instance):
 			if not items.has(instance):
@@ -66,7 +72,6 @@ func remove_item_instance(instance: XRGptItemInstance) -> bool:
 		slot.clear_item()
 	item_removed.emit(instance, slot)
 	return true
-	return false
 
 func return_active_item(instance: XRGptItemInstance) -> bool:
 	var added := add_item_instance(instance)
