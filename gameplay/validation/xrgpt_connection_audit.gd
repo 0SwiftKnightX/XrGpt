@@ -42,9 +42,8 @@ static func _check_catalog(errors: Array[String]) -> void:
 					errors.append("GENERATED_INSTANCE_MISMATCH: " + definition.item_id)
 			if generated.get_node_or_null("Visual") == null:
 				errors.append("GENERATED_VISUAL_MISSING: " + definition.item_id)
-		if generated.get_node_or_null("CollisionShape3D") == null:
-			errors.append("GENERATED_COLLISION_MISSING: " + definition.item_id)
-		if generated != null:
+			if generated.get_node_or_null("CollisionShape3D") == null:
+				errors.append("GENERATED_COLLISION_MISSING: " + definition.item_id)
 			generated.free()
 
 static func _check_main_connections(root: Node, errors: Array[String]) -> void:
