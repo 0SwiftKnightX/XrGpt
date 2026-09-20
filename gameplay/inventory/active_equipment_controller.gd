@@ -47,6 +47,13 @@ func place_item(instance: XRGptItemInstance) -> bool:
 			return true
 	return false
 
+func place_item_in_slot(instance: XRGptItemInstance, slot: XRGptItemSlot) -> bool:
+	if instance == null or slot == null or slot.inventory_slot:
+		return false
+	if not _slots.has(slot):
+		return false
+	return slot.set_item(instance)
+
 func remove_item(instance: XRGptItemInstance) -> bool:
 	for slot in _slots:
 		if slot.item == instance:
