@@ -1,33 +1,14 @@
-; Engine configuration file.
-; It's best edited using the editor UI and not directly,
-; since the parameters that go here are not all obvious.
-;
-; Format:
-;   [section] ; section goes between []
-;   param=value ; assign values to parameters
-
-config_version=5
-
 [application]
 
-config/name="New Game Project"
+config/name="XrGpt XR Foundation"
 run/main_scene="uid://cqow47bch5ocs"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
-
-[autoload]
-
-XRToolsUserSettings="*uid://bqgb8i74tm0t"
-XRToolsRumbleManager="*uid://by853dk86g1qw"
 
 [display]
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/godot-xr-tools/plugin.cfg", "res://addons/godot_ai/plugin.cfg", "res://addons/guide/plugin.cfg")
 
 [physics]
 
@@ -35,7 +16,6 @@ enabled=PackedStringArray("res://addons/godot-xr-tools/plugin.cfg", "res://addon
 
 [rendering]
 
-rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 

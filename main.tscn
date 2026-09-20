@@ -1,89 +1,34 @@
 [gd_scene format=3 uid="uid://cqow47bch5ocs"]
 
-[ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="1_ig7tw"]
-[ext_resource type="PackedScene" uid="uid://dqilakjuye5cy" path="res://player 1.tscn" id="2_0xm2m"]
-[ext_resource type="Script" uid="uid://bfrlpbsqg5lqr" path="res://addons/godot-xr-tools/objects/pickable.gd" id="3_h2yge"]
-[ext_resource type="Material" uid="uid://dyuaw57o8y3i" path="res://addons/godot-xr-tools/materials/highlight.tres" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://dqilakjuye5cy" path="res://player 1.tscn" id="2"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_h2yge"]
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 
-[sub_resource type="Sky" id="Sky_1bvp3"]
-sky_material = SubResource("ProceduralSkyMaterial_h2yge")
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
 
-[sub_resource type="Environment" id="Environment_lquwl"]
+[sub_resource type="Environment" id="Environment"]
 background_mode = 2
-sky = SubResource("Sky_1bvp3")
+sky = SubResource("Sky")
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_7ecxc"]
+[sub_resource type="PlaneMesh" id="FloorMesh"]
 size = Vector2(9, 9)
 
-[sub_resource type="BoxMesh" id="BoxMesh_7ecxc"]
-size = Vector3(0.5, 0.5, 0.5)
+[node name="Main" type="Node3D"]
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_1bvp3"]
-points = PackedVector3Array(0.25, 0.25, 0.25, 0.25, 0.25, -0.25, -0.25, 0.25, 0.25, 0.25, -0.25, 0.25, 0.25, -0.25, -0.25, -0.25, 0.25, -0.25, -0.25, -0.25, 0.25, -0.25, -0.25, -0.25)
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment")
 
-[sub_resource type="MeshTexture" id="MeshTexture_htkbo"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_qnv0a"]
-
-[sub_resource type="MeshTexture" id="MeshTexture_8pqx7"]
-mesh = SubResource("PlaneMesh_qnv0a")
-base_texture = SubResource("MeshTexture_htkbo")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e6hmw"]
-emission_enabled = true
-emission = Color(0, 0, 0.85490197, 1)
-emission_on_uv2 = true
-emission_texture = SubResource("MeshTexture_8pqx7")
-clearcoat_enabled = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_gnacy"]
-material = SubResource("StandardMaterial3D_e6hmw")
-size = Vector3(0.1, 0.1, 0.1)
-
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_lquwl"]
-points = PackedVector3Array(0.05, 0.05, 0.05, 0.05, 0.05, -0.05, -0.05, 0.05, 0.05, 0.05, -0.05, 0.05, 0.05, -0.05, -0.05, -0.05, 0.05, -0.05, -0.05, -0.05, 0.05, -0.05, -0.05, -0.05)
-
-[node name="Main" type="Node3D" unique_id=1537071750]
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=736618235]
-environment = SubResource("Environment_lquwl")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=949000698]
-transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 shadow_enabled = true
 
-[node name="StartXR" parent="." unique_id=992933223 instance=ExtResource("1_ig7tw")]
+[node name="StartXR" parent="." instance=ExtResource("1")]
 
-[node name="XROrigin3D" parent="." unique_id=1328004877 instance=ExtResource("2_0xm2m")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.7, 0.5, 0)
+[node name="XROrigin3D" parent="." instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1215851207]
-mesh = SubResource("PlaneMesh_7ecxc")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=204018661]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=2121830986]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0442708, 0.34245217, 0)
-mesh = SubResource("BoxMesh_7ecxc")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=2125965588]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0442708, 0.34245217, 0)
-shape = SubResource("ConvexPolygonShape3D_1bvp3")
-
-[node name="XRToolsPickable" type="RigidBody3D" parent="." unique_id=213698317]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0)
-script = ExtResource("3_h2yge")
-second_hand_grab = 2
-metadata/_custom_type_script = "uid://bfrlpbsqg5lqr"
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="XRToolsPickable" unique_id=1208360741]
-ignore_occlusion_culling = true
-mesh = SubResource("BoxMesh_gnacy")
-surface_material_override/0 = ExtResource("4_1bvp3")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="XRToolsPickable" unique_id=491080689]
-shape = SubResource("ConvexPolygonShape3D_lquwl")
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("FloorMesh")
