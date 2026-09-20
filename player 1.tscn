@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bq86r4yll8po" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/left_fullglove_low.tscn" id="1_left_hand"]
 [ext_resource type="PackedScene" uid="uid://d1tl07geqm5xq" path="res://addons/godot-xr-tools/hands/scenes/highpoly/right_fullglove_hand.tscn" id="2_right_hand"]
-[ext_resource type="PackedScene" uid="uid://b4ysuyuy6j0" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="3_pickup"]
+[ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="3_pickup"]
 [ext_resource type="Script" path="res://gameplay/interaction/xr_ray_pointer.gd" id="4_ray"]
 [ext_resource type="PackedScene" uid="uid://btknduttnmoxf" path="res://addons/godot-xr-tools/misc/vr_common_shader_cache.tscn" id="5_shader_cache"]
 
