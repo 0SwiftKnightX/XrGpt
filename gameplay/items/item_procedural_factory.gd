@@ -62,6 +62,8 @@ static func _create_black_cube(definition: XRGptItemDefinition) -> RigidBody3D:
 	body.set("throw_speed", 4.5)
 	body.set("projectile_speed", 8.0)
 	body.set("projectile_max_distance", 10.0)
+	body.set("left_controller_path", NodePath("../XROrigin3D/LeftController"))
+	body.set("right_controller_path", NodePath("../XROrigin3D/RightController"))
 
 	var mesh := BoxMesh.new()
 	mesh.size = Vector3(0.1, 0.1, 0.1)
