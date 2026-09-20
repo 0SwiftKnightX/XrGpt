@@ -35,6 +35,7 @@ signal test_action_fired(action_name: String)
 
 func _ready() -> void:
 	_base_scale = scale
+	ensure_item_instance("test.black_cube", "player_1")
 	var projectile := get_node_or_null("ProjectileRuntime") as XRGptProjectileRuntime
 	if projectile:
 		projectile.projectile_started.connect(_on_projectile_started)
