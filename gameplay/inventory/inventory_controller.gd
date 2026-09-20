@@ -12,6 +12,7 @@ extends Node3D
 @export var inventory_height_offset := -0.12
 
 var inventory_open := false
+var items: Array[XRGptItemInstance] = []
 var _board: Node3D
 var _camera: XRCamera3D
 
@@ -34,6 +35,15 @@ func _process(_delta: float) -> void:
 func _on_left_controller_button_pressed(action_name: String) -> void:
 	if action_name == "by_button":
 		toggle_inventory()
+
+func add_item_instance(instance: XRGptItemInstance) -> bool:
+	if instance == null:
+		return false
+	items.append(instance)
+	return true
+
+func return_active_item(instance: XRGptItemInstance) -> bool:
+	return add_item_instance(instance)
 
 func toggle_inventory() -> void:
 	inventory_open = not inventory_open
