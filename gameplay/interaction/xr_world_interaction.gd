@@ -6,7 +6,7 @@ extends Node
 
 @export var right_controller_path: NodePath
 @export var left_controller_path: NodePath
-@export var max_distance := 8.0
+@export var max_distance := 1.0
 @export var break_damage := 100.0
 @export var player_id := "player_1"
 @export var inventory_path: NodePath
