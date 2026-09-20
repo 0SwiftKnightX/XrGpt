@@ -107,12 +107,22 @@ func _is_opposite_grip_held(holding_controller: XRController3D) -> bool:
 	return opposite.get_float("grip") >= opposite_grip_threshold
 
 func _get_opposite_controller(controller: XRController3D) -> XRController3D:
-	var left := get_node_or_null(left_controller_path) as XRController3D
-	var right := get_node_or_null(right_controller_path) as XRController3D
+	var left := _resolve_controller(left_controller_path, "LeftController")
+	var right := _resolve_controller(right_controller_path, "RightController")
 	if controller == left:
 		return right
 	if controller == right:
 		return left
+	return null
+
+func _resolve_controller(path: NodePath, fallback_name: String) -> XRController3D:
+	if not path.is_empty():
+		var configured := get_node_or_null(path) as XRController3D
+		if configured != null:
+			return configured
+	var scene := get_tree().current_scene
+	if scene != null:
+		return scene.find_child(fallback_name, true, false) as XRController3D
 	return null
 
 func _set_state(new_state: TestState) -> void:
