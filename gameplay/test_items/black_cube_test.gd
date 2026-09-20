@@ -1,5 +1,5 @@
 class_name XRGptBlackCubeTest
-extends XRToolsPickable
+extends XRGptProceduralPickable
 
 ## Dedicated XR physics test item.
 ## Grip alone is ordinary pickup/hold behavior supplied by XR Tools.
@@ -63,9 +63,11 @@ func controller_action_release(controller: XRController3D) -> void:
 
 func action() -> void:
 	# Intentionally empty: trigger behavior is handled by controller_action().
+	pass
 
 func action_release() -> void:
 	# Intentionally empty: trigger behavior is handled by controller_action_release().
+	pass
 
 func _throw_from_hand(controller: XRController3D) -> void:
 	var pickup := XRToolsFunctionPickup.find_instance(controller)
