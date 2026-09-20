@@ -14,6 +14,7 @@ signal xr_grabbed(pickable: XRGptProceduralPickable, by: Node3D)
 signal xr_released(pickable: XRGptProceduralPickable, by: Node3D)
 
 func _ready() -> void:
+	super._ready()
 	if not picked_up.is_connected(_on_xr_picked_up):
 		picked_up.connect(_on_xr_picked_up)
 	if not dropped.is_connected(_on_xr_dropped):
