@@ -52,6 +52,10 @@ func place_item_in_slot(instance: XRGptItemInstance, slot: XRGptItemSlot) -> boo
 		return false
 	if not _slots.has(slot):
 		return false
+	for existing in _slots:
+		if existing.item == instance:
+			return false
+		return false
 	return slot.set_item(instance)
 
 func remove_item(instance: XRGptItemInstance) -> bool:
