@@ -176,12 +176,12 @@ func _collect_drop(drop: XRGptItemDrop) -> void:
 	if not drop.auto_collect or _inventory == null:
 		interaction_failed.emit("drop_collect", "auto_collect_disabled_or_inventory_missing")
 		return
+	var definition := XRGptItemCatalog.find_definition(drop.item_id)
+	if definition == null:
+		interaction_failed.emit("drop_collect", "unknown_item_definition")
+		return
 	var instance := XRGptItemInstance.new()
-	instance.definition_id = drop.item_id
-	instance.display_name = drop.item_name
-	instance.category = "Blocks"
-	instance.quantity = drop.quantity
-	instance.owner_id = player_id
+	instance.setup(definition, player_id, drop.quantity)
 	instance.first_claim_available = drop.first_claim_available
 	if _inventory.add_item_instance(instance):
 		interaction_succeeded.emit("drop_collected", instance)
