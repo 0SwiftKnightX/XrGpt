@@ -6,9 +6,52 @@ extends RefCounted
 
 static func run(root: Node) -> Array[String]:
 	var errors: Array[String] = []
+	if root == null:
+		errors.append("AUDIT_ROOT_MISSING")
+		return errors
 	_check_catalog(errors)
 	_check_main_connections(root, errors)
+	_check_instance_and_runtime_contract(errors)
 	return errors
+
+static func _check_instance_and_runtime_contract(errors: Array[String]) -> void:
+	for definition in XRGptItemCatalog.get_all_definitions():
+		if definition == null:
+			continue
+		var instance := XRGptItemInstance.new()
+		instance.setup(definition, "player_1")
+		if instance.definition_id != definition.item_id:
+			errors.append("INSTANCE_DEFINITION_MISMATCH: " + definition.item_id)
+		if instance.owner_id != "player_1":
+			errors.append("INSTANCE_OWNER_MISMATCH: " + definition.item_id)
+		if instance.quantity < 1 or instance.quantity > definition.max_stack:
+			errors.append("INSTANCE_QUANTITY_INVALID: " + definition.item_id)
+		var world_item := XRGptItemRuntime.spawn_instance(instance)
+		if world_item == null:
+			errors.append("RUNTIME_SPAWN_FAILED: " + definition.item_id)
+			continue
+		if not world_item is RigidBody3D:
+			errors.append("RUNTIME_OBJECT_NOT_RIGID_BODY: " + definition.item_id)
+		if not world_item is XRGptProceduralPickable:
+			errors.append("RUNTIME_OBJECT_NOT_PICKABLE: " + definition.item_id)
+		else:
+			var pickable := world_item as XRGptProceduralPickable
+			if pickable.item_instance != instance:
+				errors.append("RUNTIME_INSTANCE_MISMATCH: " + definition.item_id)
+			if not pickable.has_method("pick_up") or not pickable.has_method("return_to_inventory"):
+				errors.append("RUNTIME_PICKUP_RETURN_API_MISSING: " + definition.item_id)
+			if definition.item_id == "test.black_cube":
+				var left_path: NodePath = pickable.get("left_controller_path")
+				var right_path: NodePath = pickable.get("right_controller_path")
+				if left_path != NodePath("XROrigin3D/LeftController"):
+					errors.append("BLACK_CUBE_LEFT_CONTROLLER_PATH_INVALID")
+				if right_path != NodePath("XROrigin3D/RightController"):
+					errors.append("BLACK_CUBE_RIGHT_CONTROLLER_PATH_INVALID")
+		if world_item.get_node_or_null("Visual") == null:
+			errors.append("RUNTIME_VISUAL_MISSING: " + definition.item_id)
+		if world_item.get_node_or_null("CollisionShape3D") == null:
+			errors.append("RUNTIME_COLLISION_MISSING: " + definition.item_id)
+		world_item.free()
 
 static func _check_catalog(errors: Array[String]) -> void:
 	var definitions := XRGptItemCatalog.get_all_definitions()
@@ -62,6 +105,17 @@ static func _check_main_connections(root: Node, errors: Array[String]) -> void:
 	var inventory := xr_origin.get_node_or_null("InventoryController") as XRGptInventoryController
 	if inventory == null:
 		errors.append("INVENTORY_MISSING: Main/XROrigin3D/InventoryController")
+	else:
+		if inventory.left_controller_path != NodePath("../LeftController"):
+			errors.append("INVENTORY_LEFT_CONTROLLER_PATH_INVALID")
+		if inventory.camera_path != NodePath("../XRCamera3D"):
+			errors.append("INVENTORY_CAMERA_PATH_INVALID")
+
+	var equipment := xr_origin.get_node_or_null("ActiveEquipmentController") as XRGptActiveEquipmentController
+	if equipment == null:
+		errors.append("ACTIVE_EQUIPMENT_MISSING: Main/XROrigin3D/ActiveEquipmentController")
+	elif equipment.camera_path != NodePath("../XRCamera3D"):
+		errors.append("ACTIVE_EQUIPMENT_CAMERA_PATH_INVALID")
 
 	var creative := xr_origin.get_node_or_null("CreativeItemIndex") as XRGptCreativeItemIndex
 	if creative == null:
