@@ -142,10 +142,12 @@ static func _check_main_connections(root: Node, errors: Array[String]) -> void:
 		errors.append("LEFT_CONTROLLER_MISSING")
 	else:
 		_check_pickup_function(left, "LEFT", errors)
+		_check_ray_pointer(left, "LEFT", errors)
 	if right == null:
 		errors.append("RIGHT_CONTROLLER_MISSING")
 	else:
 		_check_pickup_function(right, "RIGHT", errors)
+		_check_ray_pointer(right, "RIGHT", errors)
 
 static func _check_pickup_function(controller: XRController3D, label: String, errors: Array[String]) -> void:
 	var pickup := XRToolsFunctionPickup.find_instance(controller)
@@ -158,3 +160,14 @@ static func _check_pickup_function(controller: XRController3D, label: String, er
 		errors.append(label + "_PICKUP_GRAB_MASK_EXCLUDES_LAYER_3")
 	if (pickup.ranged_collision_mask & 4) == 0:
 		errors.append(label + "_PICKUP_RANGED_MASK_EXCLUDES_LAYER_3")
+
+
+static func _check_ray_pointer(controller: XRController3D, label: String, errors: Array[String]) -> void:
+	var pointer := controller.get_node_or_null("RayPointer") as XRGptRayPointer
+	if pointer == null:
+		errors.append(label + "_RAY_POINTER_MISSING")
+		return
+	if (pointer.pointer_collision_mask & 4) == 0:
+		errors.append(label + "_RAY_POINTER_MASK_EXCLUDES_LAYER_3")
+	if (pointer.pointer_collision_mask & 8) == 0:
+		errors.append(label + "_RAY_POINTER_MASK_EXCLUDES_LAYER_4")
