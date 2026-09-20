@@ -81,7 +81,16 @@ func remove_item_instance(instance: XRGptItemInstance) -> bool:
 	return true
 
 func place_item_in_slot(instance: XRGptItemInstance, slot: XRGptItemSlot) -> bool:
-	if instance == null or slot == null:
+	if instance == null or slot == null or not slot.inventory_slot:
+		return false
+	if not _slots.has(slot):
+		return false
+	if _find_slot_for_instance(instance) != null:
+		return false
+	var definition := XRGptItemCatalog.find_definition(instance.definition_id)
+	if definition == null or instance.owner_id != local_player_id:
+		return false
+	if instance.quantity < 1 or instance.quantity > definition.max_stack:
 		return false
 	if not slot.set_item(instance):
 		return false
