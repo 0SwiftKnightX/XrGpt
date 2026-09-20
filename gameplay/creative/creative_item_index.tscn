@@ -1,6 +1,7 @@
 [gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://gameplay/creative/creative_item_index.gd" id="1"]
+[ext_resource type="Script" path="res://gameplay/creative/creative_item_button.gd" id="4"]
 [ext_resource type="Resource" path="res://gameplay/items/rock_definition.tres" id="2"]
 [ext_resource type="Resource" path="res://gameplay/items/stone_definition.tres" id="3"]
 
@@ -40,6 +41,9 @@ position = Vector3(-0.78, 0.08, -0.45)
 
 [node name="Rock" type="Node3D" parent="."]
 position = Vector3(-0.65, 0.02, -0.08)
+script = ExtResource("4")
+item_definition = ExtResource("2")
+creative_index_path = NodePath("..")
 
 [node name="Visual" type="MeshInstance3D" parent="Rock"]
 mesh = SubResource("ButtonMesh")
@@ -54,6 +58,9 @@ position = Vector3(0, 0.05, -0.23)
 
 [node name="Stone" type="Node3D" parent="."]
 position = Vector3(0.65, 0.02, -0.08)
+script = ExtResource("4")
+item_definition = ExtResource("3")
+creative_index_path = NodePath("..")
 
 [node name="Visual" type="MeshInstance3D" parent="Stone"]
 mesh = SubResource("ButtonMesh")
@@ -80,4 +87,3 @@ outline_size = 4
 pixel_size = 0.0016
 position = Vector3(0, 0.08, 0.65)
 
-[connection type="ready" from="." to="." method="_on_ready"]
