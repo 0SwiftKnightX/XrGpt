@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://gameplay/items/item_drop.gd" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="StoneMat"]
+albedo_color = Color(0.48, 0.47, 0.44, 1)
+roughness = 0.82
+
+[sub_resource type="BoxMesh" id="StoneMesh"]
+size = Vector3(0.38, 0.38, 0.38)
+
+[sub_resource type="BoxShape3D" id="StoneShape"]
+size = Vector3(0.38, 0.38, 0.38)
+
+[node name="StoneDrop" type="RigidBody3D"]
+script = ExtResource("1")
+mass = 0.3
+linear_damp = 1.2
+angular_damp = 1.0
+can_sleep = true
+continuous_cd = true
+
+[node name="Visual" type="MeshInstance3D" parent="."]
+mesh = SubResource("StoneMesh")
+material_override = SubResource("StoneMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("StoneShape")
