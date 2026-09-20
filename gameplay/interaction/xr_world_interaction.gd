@@ -13,7 +13,6 @@ extends Node
 
 var _right_controller: XRController3D
 var _inventory: Node
-: XRController3D
 
 func _ready() -> void:
 	_right_controller = get_node_or_null(right_controller_path) as XRController3D
