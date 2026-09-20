@@ -13,10 +13,18 @@ extends Node3D
 var _ray_mesh: MeshInstance3D
 var _controller: XRController3D
 var _material: StandardMaterial3D
+var _reticle: MeshInstance3D
+var _reticle_material: StandardMaterial3D
 
 func _ready() -> void:
 	_controller = get_parent() as XRController3D
 	_ray_mesh = get_node_or_null("Ray") as MeshInstance3D
+	_reticle = get_node_or_null("Reticle") as MeshInstance3D
+	if _reticle:
+		_reticle_material = _reticle.get_active_material(0) as StandardMaterial3D
+		if _reticle_material:
+			_reticle_material = _reticle_material.duplicate() as StandardMaterial3D
+			_reticle.material_override = _reticle_material
 	if _ray_mesh:
 		_material = _ray_mesh.get_active_material(0) as StandardMaterial3D
 		if _material:
@@ -30,6 +38,13 @@ func set_ray_color(color: Color) -> void:
 		_material.albedo_color = color
 		_material.emission_enabled = true
 		_material.emission = Color(color.r, color.g, color.b, 1.0)
+	_set_reticle_color(color)
+
+func _set_reticle_color(color: Color) -> void:
+	if _reticle_material:
+		_reticle_material.albedo_color = color
+		_reticle_material.emission_enabled = true
+		_reticle_material.emission = Color(color.r, color.g, color.b, 1.0)
 
 func _process(_delta: float) -> void:
 	if _controller == null or _ray_mesh == null:
@@ -44,3 +59,8 @@ func _process(_delta: float) -> void:
 		distance = from.distance_to(hit.position)
 	_ray_mesh.position = Vector3(0.0, 0.0, -distance * 0.5)
 	_ray_mesh.scale = Vector3(1.0, distance, 1.0)
+	if _reticle:
+		_reticle.visible = not hit.is_empty()
+		if not hit.is_empty():
+			_reticle.global_position = hit.position
+			_set_reticle_color(hit_color)
