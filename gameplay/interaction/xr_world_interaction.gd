@@ -7,6 +7,7 @@ extends Node
 @export var right_controller_path: NodePath
 @export var left_controller_path: NodePath
 @export var max_distance := 1.0
+@export_flags_3d_physics var interaction_collision_mask := 5
 @export var break_damage := 100.0
 @export var player_id := "player_1"
 @export var inventory_path: NodePath
@@ -87,6 +88,8 @@ func _raycast(controller: XRController3D = null) -> Dictionary:
 	var direction := -source.global_transform.basis.z
 	var query := PhysicsRayQueryParameters3D.create(from, from + direction * max_distance)
 	query.collide_with_areas = true
+	query.collide_with_bodies = true
+	query.collision_mask = interaction_collision_mask
 	return get_viewport().get_world_3d().direct_space_state.intersect_ray(query)
 
 func _find_item_slot(node: Node) -> XRGptItemSlot:
