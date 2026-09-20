@@ -23,7 +23,9 @@ static func _create_physical_block(definition: XRGptItemDefinition, _owner_id: S
 	var body := RigidBody3D.new()
 	body.name = definition.display_name.replace(" ", "") + "Procedural"
 	body.set_script(load("res://gameplay/items/procedural_pickable.gd"))
-	body.set("bind_item_instance", instance)
+	var pickable := body as XRGptProceduralPickable
+	if pickable != null:
+		pickable.bind_item_instance(instance)
 	body.mass = mass
 	body.continuous_cd = true
 	body.collision_layer = 4
@@ -64,7 +66,9 @@ static func _create_black_cube(definition: XRGptItemDefinition, instance: XRGptI
 	body.set("throw_speed", 4.5)
 	body.set("projectile_speed", 8.0)
 	body.set("projectile_max_distance", 10.0)
-	body.set("bind_item_instance", instance)
+	var pickable := body as XRGptProceduralPickable
+	if pickable != null:
+		pickable.bind_item_instance(instance)
 	body.set("left_controller_path", NodePath("../XROrigin3D/LeftController"))
 	body.set("right_controller_path", NodePath("../XROrigin3D/RightController"))
 
