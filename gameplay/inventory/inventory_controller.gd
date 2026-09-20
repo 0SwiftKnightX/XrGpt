@@ -46,7 +46,14 @@ func _on_left_controller_button_pressed(action_name: String) -> void:
 		toggle_inventory()
 
 func add_item_instance(instance: XRGptItemInstance) -> bool:
-	if instance == null:
+	if instance == null or instance.definition_id.is_empty():
+		return false
+	var definition := XRGptItemCatalog.find_definition(instance.definition_id)
+	if definition == null:
+		return false
+	if instance.owner_id.is_empty() or instance.owner_id != local_player_id:
+		return false
+	if instance.quantity < 1 or instance.quantity > definition.max_stack:
 		return false
 	var existing_slot := _find_slot_for_instance(instance)
 	if existing_slot != null:
