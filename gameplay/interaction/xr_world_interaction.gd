@@ -53,6 +53,7 @@ func _handle_trigger(controller: XRController3D, action_name: String) -> void:
 func _try_grab_or_world_interaction() -> void:
 	var hit := _raycast(_active_controller)
 	if hit.is_empty():
+		interaction_failed.emit("trigger_interaction", "no_raycast_hit")
 		return
 
 	var slot := _find_item_slot(hit.get("collider") as Node)
@@ -63,7 +64,10 @@ func _try_grab_or_world_interaction() -> void:
 	var collider := hit.get("collider") as Node
 	var creative_button := _find_creative_button(collider)
 	if creative_button != null:
-		creative_button.activate()
+		if creative_button.activate():
+			interaction_succeeded.emit("creative_item_created", null)
+		else:
+			interaction_failed.emit("creative_item_activate", "creative_activation_failed")
 		return
 
 	if collider is XRGptProceduralPickable:
@@ -102,43 +106,55 @@ func _find_creative_button(node: Node) -> XRGptCreativeItemButton:
 	return null
 
 func _grab_from_slot(slot: XRGptItemSlot) -> void:
-	_held_item = slot.clear_item()
-	_origin_slot = slot
-	if _held_item == null:
+	if slot == null or slot.item == null:
+		interaction_failed.emit("slot_grab", "empty_slot")
 		return
-
+	_held_item = slot.item
+	_origin_slot = slot
 	if slot.inventory_slot and _inventory:
-		_inventory.remove_item_instance(_held_item)
+		if not _inventory.remove_item_instance(_held_item):
+			_held_item = null
+			_origin_slot = null
+			interaction_failed.emit("slot_grab", "inventory_remove_failed")
 	elif not slot.inventory_slot and _active_equipment:
-		_active_equipment.remove_item(_held_item)
+		if not _active_equipment.remove_item(_held_item):
+			_held_item = null
+			_origin_slot = null
+			interaction_failed.emit("slot_grab", "equipment_remove_failed")
+	else:
+		_held_item = null
+		_origin_slot = null
+		interaction_failed.emit("slot_grab", "missing_container")
 
 func _release_held_item() -> void:
 	var hit := _raycast()
 	var target := _find_item_slot(hit.get("collider") as Node) if not hit.is_empty() else null
 	var placed := false
 
-	if target != null and target != _origin_slot and target.set_item(_held_item):
-		placed = true
+	if target != null and target != _origin_slot:
 		if target.inventory_slot and _inventory:
-			if not _inventory.items.has(_held_item):
-				_inventory.add_item_instance(_held_item)
-		elif not target.inventory_slot and _inventory:
-			_inventory.remove_item_instance(_held_item)
-		_held_item = null
-		_origin_slot = null
-		return
+			placed = _inventory.place_item_in_slot(_held_item, target)
+		elif not target.inventory_slot and _active_equipment:
+			placed = _active_equipment.add_item(_held_item)
+		if placed:
+			interaction_succeeded.emit("item_slot_placed", _held_item)
+			_held_item = null
+			_origin_slot = null
+			return
 
 	if not placed and _held_item != null and _place_held_item_in_world(hit):
 		placed = true
 
-	if not placed and _held_item != null and _origin_slot != null and _origin_slot.set_item(_held_item):
-		placed = true
-		if _origin_slot.inventory_slot and _inventory and not _inventory.items.has(_held_item):
-			_inventory.add_item_instance(_held_item)
+	if not placed and _held_item != null and _origin_slot != null:
+		if _origin_slot.inventory_slot and _inventory:
+			placed = _inventory.place_item_in_slot(_held_item, _origin_slot)
+		elif not _origin_slot.inventory_slot and _active_equipment:
+			placed = _active_equipment.add_item(_held_item)
 
 	if not placed and _held_item != null:
 		if _inventory and _inventory.add_item_instance(_held_item):
 			placed = true
+			interaction_succeeded.emit("item_returned_to_inventory", _held_item)
 		else:
 			interaction_failed.emit("item_release", "no_valid_destination")
 
@@ -146,9 +162,14 @@ func _release_held_item() -> void:
 	_origin_slot = null
 
 func _collect_drop(drop: XRGptItemDrop) -> void:
+	if drop == null:
+		interaction_failed.emit("drop_collect", "missing_drop")
+		return
 	if not drop.is_owned_by(player_id):
+		interaction_failed.emit("drop_collect", "owner_mismatch")
 		return
 	if not drop.auto_collect or _inventory == null:
+		interaction_failed.emit("drop_collect", "auto_collect_disabled_or_inventory_missing")
 		return
 	var instance := XRGptItemInstance.new()
 	instance.definition_id = drop.item_id
@@ -164,9 +185,14 @@ func _collect_drop(drop: XRGptItemDrop) -> void:
 		interaction_failed.emit("drop_collect", "inventory_full")
 
 func _collect_procedural_item(item: XRGptProceduralPickable) -> bool:
-	if item == null or _inventory == null:
+	if item == null:
+		interaction_failed.emit("procedural_collect", "missing_item")
+		return false
+	if _inventory == null:
+		interaction_failed.emit("procedural_collect", "inventory_missing")
 		return false
 	if item.item_instance == null:
+		interaction_failed.emit("procedural_collect", "item_instance_missing")
 		return false
 	var instance := item.item_instance
 	var returned := item.return_to_inventory(_inventory, player_id)
