@@ -41,11 +41,9 @@ static func _check_instance_and_runtime_contract(errors: Array[String]) -> void:
 			if not pickable.has_method("pick_up") or not pickable.has_method("return_to_inventory"):
 				errors.append("RUNTIME_PICKUP_RETURN_API_MISSING: " + definition.item_id)
 			if definition.item_id == "test.black_cube":
-				var left_path: NodePath = pickable.get("left_controller_path")
-				var right_path: NodePath = pickable.get("right_controller_path")
-				if left_path != NodePath("XROrigin3D/LeftController"):
+				if pickable.get("left_controller_path") != NodePath("XROrigin3D/LeftController"):
 					errors.append("BLACK_CUBE_LEFT_CONTROLLER_PATH_INVALID")
-				if right_path != NodePath("XROrigin3D/RightController"):
+				if pickable.get("right_controller_path") != NodePath("XROrigin3D/RightController"):
 					errors.append("BLACK_CUBE_RIGHT_CONTROLLER_PATH_INVALID")
 		if world_item.get_node_or_null("Visual") == null:
 			errors.append("RUNTIME_VISUAL_MISSING: " + definition.item_id)
