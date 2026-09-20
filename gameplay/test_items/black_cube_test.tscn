@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://addons/godot-xr-tools/objects/pickable.gd" id="1_pickable"]
+[ext_resource type="Script" path="res://gameplay/test_items/black_cube_test.gd" id="2_cube"]
+[ext_resource type="Script" path="res://gameplay/projectiles/projectile_runtime.gd" id="3_projectile"]
+
+[sub_resource type="StandardMaterial3D" id="BlackMaterial"]
+albedo_color = Color(0.005, 0.005, 0.008, 1)
+roughness = 0.82
+
+[sub_resource type="BoxMesh" id="CubeMesh"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxShape3D" id="CubeShape"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="LabelMaterial"]
+albedo_color = Color(0.1, 0.45, 1, 1)
+emission_enabled = true
+emission = Color(0.05, 0.2, 1, 1)
+
+[node name="BlackCubeTest" type="RigidBody3D"]
+collision_layer = 4
+collision_mask = 5
+mass = 0.05
+continuous_cd = true
+script = ExtResource("1_pickable")
+press_to_hold = true
+ranged_grab_method = 1
+script = ExtResource("2_cube")
+left_controller_path = NodePath("../../XROrigin3D/LeftController")
+right_controller_path = NodePath("../../XROrigin3D/RightController")
+
+[node name="Visual" type="MeshInstance3D" parent="."]
+mesh = SubResource("CubeMesh")
+material_override = SubResource("BlackMaterial")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CubeShape")
+
+[node name="ItemName" type="Label3D" parent="."]
+position = Vector3(0, 0.09, 0)
+text = "BLACK CUBE"
+font_size = 24
+modulate = Color(0.1, 0.45, 1, 1)
+outline_size = 4
+billboard = 1
+
+[node name="ProjectileRuntime" type="Node" parent="."]
+script = ExtResource("3_projectile")
+max_distance = 10.0
+destroy_on_impact = true
