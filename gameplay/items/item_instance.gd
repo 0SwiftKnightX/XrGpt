@@ -11,10 +11,14 @@ var owner_id: String = ""
 var first_claim_available: bool = false
 
 func setup(definition: XRGptItemDefinition, owner: String, amount: int = 1) -> void:
+	if definition == null or definition.item_id.is_empty():
+		definition_id = ""
+		return
 	definition_id = definition.item_id
 	display_name = definition.display_name
 	category = definition.category
 	rarity = definition.rarity
-	quantity = amount
+	quantity = clampi(amount, 1, definition.max_stack)
+	durability = 1.0
 	owner_id = owner
 	first_claim_available = definition.first_claim_relinquishable
