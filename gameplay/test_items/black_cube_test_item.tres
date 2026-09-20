@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_definition")
-item_id = "black_cube_test"
+item_id = "test.black_cube"
 display_name = "BLACK CUBE"
 category = "Test"
 rarity = "Test"
