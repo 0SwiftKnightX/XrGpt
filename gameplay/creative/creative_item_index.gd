@@ -2,10 +2,12 @@ class_name XRGptCreativeItemIndex
 extends Node3D
 
 @export var owner_inventory_path: NodePath
+@export var initial_role: XRGptPlayerPermissions.Role = XRGptPlayerPermissions.Role.GUEST
 var permissions := XRGptPlayerPermissions.new()
 var catalog: Array[XRGptItemDefinition] = []
 
 func _ready() -> void:
+	permissions.set_role_authoritative(initial_role)
 	_refresh_catalog()
 
 func _refresh_catalog() -> void:
