@@ -135,7 +135,7 @@ func _release_held_item() -> void:
 		if target.inventory_slot and _inventory:
 			placed = _inventory.place_item_in_slot(_held_item, target)
 		elif not target.inventory_slot and _active_equipment:
-			placed = _active_equipment.add_item(_held_item)
+			placed = _active_equipment.place_item(_held_item)
 		if placed:
 			interaction_succeeded.emit("item_slot_placed", _held_item)
 			_held_item = null
