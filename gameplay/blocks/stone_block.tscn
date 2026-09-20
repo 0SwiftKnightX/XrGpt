@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://gameplay/blocks/terrain_block.gd" id="1"]
+[ext_resource type="PackedScene" path="res://gameplay/items/stone_drop.tscn" id="2"]
+
+[sub_resource type="StandardMaterial3D" id="StoneMat"]
+albedo_color = Color(0.46, 0.45, 0.42, 1)
+roughness = 0.82
+
+[sub_resource type="BoxMesh" id="StoneMesh"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="StoneShape"]
+size = Vector3(1, 1, 1)
+
+[node name="StoneBlock" type="StaticBody3D"]
+script = ExtResource("1")
+item_id = "stone"
+item_name = "Stone"
+max_health = 140.0
+drop_scene = ExtResource("2")
+drop_auto_collect = true
+drop_relinquishable = false
+
+[node name="Visual" type="MeshInstance3D" parent="."]
+mesh = SubResource("StoneMesh")
+material_override = SubResource("StoneMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("StoneShape")
