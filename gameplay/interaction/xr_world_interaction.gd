@@ -101,6 +101,8 @@ func _release_held_item() -> void:
 		if target.inventory_slot and _inventory:
 			if not _inventory.items.has(_held_item):
 				_inventory.items.append(_held_item)
+		elif not target.inventory_slot and _inventory:
+			_inventory.remove_item_instance(_held_item)
 		_held_item = null
 		_origin_slot = null
 		return
