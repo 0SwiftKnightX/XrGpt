@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cqow47bch5ocs"]
+[gd_scene load_steps=15 format=3 uid="uid://cqow47bch5ocs"]
 
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://dqilakjuye5cy" path="res://player 1.tscn" id="2"]
@@ -8,6 +8,8 @@
 [ext_resource type="Script" path="res://gameplay/interaction/xr_world_interaction.gd" id="6"]
 [ext_resource type="PackedScene" path="res://gameplay/inventory/active_equipment_controller.tscn" id="7"]
 [ext_resource type="PackedScene" path="res://gameplay/hud/hud_board.tscn" id="8"]
+[ext_resource type="Script" path="res://gameplay/world/day_night_cycle.gd" id="9"]
+[ext_resource type="Script" path="res://gameplay/world/light_exposure.gd" id="10"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_horizon_color = Color(0.12, 0.15, 0.2, 1)
@@ -47,6 +49,21 @@ light_energy = 1.2
 shadow_enabled = true
 
 [node name="StartXR" parent="." instance=ExtResource("1")]
+
+[node name="DayNightCycle" type="Node3D" parent="."]
+script = ExtResource("9")
+enabled = false
+
+[node name="Sun" type="DirectionalLight3D" parent="DayNightCycle"]
+light_energy = 1.0
+shadow_enabled = true
+
+[node name="Moon" type="DirectionalLight3D" parent="DayNightCycle"]
+light_energy = 0.0
+shadow_enabled = true
+
+[node name="LightExposure" type="Node" parent="DayNightCycle"]
+script = ExtResource("10")
 
 [node name="XROrigin3D" parent="." instance=ExtResource("2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
