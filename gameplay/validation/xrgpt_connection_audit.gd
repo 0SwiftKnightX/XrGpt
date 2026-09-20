@@ -32,7 +32,8 @@ static func _check_catalog(errors: Array[String]) -> void:
 		if generated == null:
 			errors.append("PROCEDURAL_GENERATOR_MISSING: " + definition.item_id)
 		else:
-			if not generated is RigidBody3D:
+			var generated_body := generated as RigidBody3D
+			if generated_body == null:
 				errors.append("GENERATED_OBJECT_NOT_RIGID_BODY: " + definition.item_id)
 			if not generated is XRGptProceduralPickable:
 				errors.append("GENERATED_OBJECT_NOT_PICKABLE: " + definition.item_id)
@@ -46,7 +47,7 @@ static func _check_catalog(errors: Array[String]) -> void:
 				errors.append("GENERATED_COLLISION_MISSING: " + definition.item_id)
 			if not generated.has_method("pick_up") or not generated.has_method("can_pick_up"):
 				errors.append("GENERATED_PICKUP_API_MISSING: " + definition.item_id)
-			if (generated.collision_layer & 4) == 0:
+			if generated_body != null and (generated_body.collision_layer & 4) == 0:
 				errors.append("GENERATED_PICKUP_LAYER_MISMATCH: " + definition.item_id)
 			if generated.get_parent() != null:
 				generated.get_parent().remove_child(generated)
