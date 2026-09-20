@@ -65,8 +65,11 @@ func create_item(definition: XRGptItemDefinition, owner_id: String) -> XRGptItem
 func generate_world_item(definition: XRGptItemDefinition, owner_id: String = "player_1") -> Node3D:
 	if not can_open() or definition == null:
 		return null
+	var canonical := XRGptItemCatalog.find_definition(definition.item_id)
+	if canonical == null or canonical != definition:
+		return null
 	var instance := XRGptItemInstance.new()
-	instance.setup(definition, owner_id)
+	instance.setup(canonical, owner_id)
 	var world_item := XRGptItemRuntime.spawn_instance(instance, get_tree().current_scene)
 	if world_item != null:
 		world_item_generated.emit(instance, world_item)
@@ -74,6 +77,8 @@ func generate_world_item(definition: XRGptItemDefinition, owner_id: String = "pl
 
 func spawn_item_instance(instance: XRGptItemInstance) -> Node3D:
 	if not can_open() or instance == null:
+		return null
+	if not XRGptItemCatalog.contains_definition(instance.definition_id):
 		return null
 	var world_item := XRGptItemRuntime.spawn_instance(instance, get_tree().current_scene)
 	if world_item != null:
