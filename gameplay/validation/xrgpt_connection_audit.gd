@@ -26,8 +26,26 @@ static func _check_catalog(errors: Array[String]) -> void:
 		if ids.has(definition.item_id):
 			errors.append("ITEM_ID_DUPLICATE: " + definition.item_id)
 		ids[definition.item_id] = true
-		if XRGptItemProceduralFactory.create_world_item(definition) == null:
+		var test_instance := XRGptItemInstance.new()
+		test_instance.setup(definition, "player_1")
+		var generated := XRGptItemProceduralFactory.create_world_item(definition, "player_1", test_instance)
+		if generated == null:
 			errors.append("PROCEDURAL_GENERATOR_MISSING: " + definition.item_id)
+		else:
+			if not generated is RigidBody3D:
+				errors.append("GENERATED_OBJECT_NOT_RIGID_BODY: " + definition.item_id)
+			if not generated is XRGptProceduralPickable:
+				errors.append("GENERATED_OBJECT_NOT_PICKABLE: " + definition.item_id)
+			else:
+				var pickable := generated as XRGptProceduralPickable
+				if pickable.item_instance != test_instance:
+					errors.append("GENERATED_INSTANCE_MISMATCH: " + definition.item_id)
+			if generated.get_node_or_null("Visual") == null:
+				errors.append("GENERATED_VISUAL_MISSING: " + definition.item_id)
+		if generated.get_node_or_null("CollisionShape3D") == null:
+			errors.append("GENERATED_COLLISION_MISSING: " + definition.item_id)
+		if generated != null:
+			generated.free()
 
 static func _check_main_connections(root: Node, errors: Array[String]) -> void:
 	var xr_origin := root.get_node_or_null("XROrigin3D")
