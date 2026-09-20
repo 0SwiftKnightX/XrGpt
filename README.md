@@ -57,3 +57,5 @@ GPT work log continuation
 8. Inventory round-trip: verify the item appears in a slot after re-pickup and can be removed again.
 9. Black Cube test: grip → trigger throw, then grip → opposite-hand grip → trigger projectile launch; verify the state transitions without parser/runtime errors.
 10. Record the first Godot/Quest error exactly as shown before making another code change. Do not treat headset behavior as verified until this physical test is completed.
+
+- 2026-09-20 — Step 10 Inventory Again pass: traced the final round-trip from re-picked procedural world object back through `XRGptProceduralPickable.return_to_inventory()` into `XRGptInventoryController.add_item_instance()`. The return path preserves the exact existing `XRGptItemInstance`, re-validates its catalog definition, owner, and quantity, places it into an available inventory slot, emits the inventory-added/return events, and only then removes the physical world object. No concrete Step 10 code defect was found, so no gameplay file was changed. Runtime/parser/Quest 3S execution remains the final verification requirement for the complete 10-step chain. — GPT
