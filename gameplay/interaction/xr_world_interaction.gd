@@ -61,6 +61,9 @@ func _try_grab_or_world_interaction() -> void:
 		creative_button.activate()
 		return
 
+	if collider is XRGptProceduralPickable:
+		_collect_procedural_item(collider as XRGptProceduralPickable)
+		return
 	if collider is XRGptItemDrop:
 		_collect_drop(collider as XRGptItemDrop)
 		return
@@ -126,6 +129,10 @@ func _release_held_item() -> void:
 			_inventory.items.append(_held_item)
 
 	if not placed and _held_item != null:
+		if _place_held_item_in_world(hit):
+			placed = true
+
+	if not placed and _held_item != null:
 		if _inventory and _inventory.add_item_instance(_held_item):
 			placed = true
 
@@ -146,3 +153,24 @@ func _collect_drop(drop: XRGptItemDrop) -> void:
 	instance.first_claim_available = drop.first_claim_available
 	if _inventory.add_item_instance(instance):
 		drop.queue_free()
+
+func _collect_procedural_item(item: XRGptProceduralPickable) -> bool:
+	if item == null or _inventory == null:
+		return false
+	if item.item_instance == null:
+		return false
+	return item.return_to_inventory(_inventory, player_id)
+
+func _place_held_item_in_world(hit: Dictionary) -> bool:
+	if _held_item == null or hit.is_empty():
+		return false
+	var definition := XRGptItemCatalog.find_definition(_held_item.definition_id)
+	if definition == null:
+		return false
+	var world_item := XRGptItemRuntime.spawn_instance(_held_item, get_tree().current_scene)
+	if world_item == null:
+		return false
+	var normal: Vector3 = hit.get("normal", Vector3.UP)
+	var position: Vector3 = hit.get("position", Vector3.ZERO)
+	world_item.global_position = position + normal.normalized() * 0.06
+	return true
