@@ -123,14 +123,13 @@ func _release_held_item() -> void:
 		_origin_slot = null
 		return
 
-	if _origin_slot != null and _origin_slot.set_item(_held_item):
+	if not placed and _held_item != null and _place_held_item_in_world(hit):
+		placed = true
+
+	if not placed and _held_item != null and _origin_slot != null and _origin_slot.set_item(_held_item):
 		placed = true
 		if _origin_slot.inventory_slot and _inventory and not _inventory.items.has(_held_item):
 			_inventory.items.append(_held_item)
-
-	if not placed and _held_item != null:
-		if _place_held_item_in_world(hit):
-			placed = true
 
 	if not placed and _held_item != null:
 		if _inventory and _inventory.add_item_instance(_held_item):
