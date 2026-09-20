@@ -1,5 +1,5 @@
 class_name XRGptCreativeItemIndex
-extends Node
+extends Node3D
 
 @export var owner_inventory_path: NodePath
 var permissions := XRGptPlayerPermissions.new()
