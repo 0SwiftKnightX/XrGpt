@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://gameplay/inventory/inventory_controller.gd" id="1"]
 
@@ -24,7 +24,7 @@ size = Vector3(0.34, 0.045, 0.34)
 [node name="InventoryController" type="Node3D"]
 script = ExtResource("1")
 
-[node name="InventoryBoard" type="Node3D" parent="."]
+[node name="InventoryBoard" type="Node3D" parent="InventoryBoard"]
 
 [node name="Panel" type="MeshInstance3D" parent="InventoryBoard"]
 mesh = SubResource("BoardMesh")
@@ -45,56 +45,56 @@ pixel_size = 0.0025
 position = Vector3(0, 0.08, -0.58)
 
 [node name="InventorySlot01" type="Node3D" parent="."]
-position = Vector3(-0.72, 0, -1.0)
+position = Vector3(-0.72, 0.09, -0.25)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot01"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot02" type="Node3D" parent="."]
-position = Vector3(-0.24, 0, -1.0)
+position = Vector3(-0.24, 0.09, -0.25)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot02"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot03" type="Node3D" parent="."]
-position = Vector3(0.24, 0, -1.0)
+position = Vector3(0.24, 0.09, -0.25)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot03"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot04" type="Node3D" parent="."]
-position = Vector3(0.72, 0, -1.0)
+position = Vector3(0.72, 0.09, -0.25)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot04"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot05" type="Node3D" parent="."]
-position = Vector3(-0.72, 0, -0.58)
+position = Vector3(-0.72, 0.09, 0.25)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot05"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot06" type="Node3D" parent="."]
-position = Vector3(-0.24, 0, -0.58)
+position = Vector3(-0.24, 0.09, 0.25)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot06"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot07" type="Node3D" parent="."]
-position = Vector3(0.24, 0, -0.58)
+position = Vector3(0.24, 0.09, 0.25)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot07"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot08" type="Node3D" parent="."]
-position = Vector3(0.72, 0, -0.58)
+position = Vector3(0.72, 0.09, 0.25)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot08"]
 mesh = SubResource("SlotMesh")
