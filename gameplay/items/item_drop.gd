@@ -4,7 +4,7 @@ extends RigidBody3D
 ## Physical world item drop.
 ## The same drop can be rendered solid for its owner or ghosted for other players.
 
-@export var item_id := "rock"
+@export var item_id := "block.rock"
 @export var item_name := "Rock"
 @export var quantity := 1
 @export var owner_id := ""
