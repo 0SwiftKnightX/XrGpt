@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cqow47bch5ocs"]
+[gd_scene load_steps=17 format=3 uid="uid://cqow47bch5ocs"]
 
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://dqilakjuye5cy" path="res://player 1.tscn" id="2"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://gameplay/world/day_night_cycle.gd" id="9"]
 [ext_resource type="Script" path="res://gameplay/world/light_exposure.gd" id="10"]
 [ext_resource type="PackedScene" path="res://gameplay/test_items/black_cube_test.tscn" id="11"]
+[ext_resource type="PackedScene" path="res://gameplay/creative/creative_item_index.tscn" id="12"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_horizon_color = Color(0.12, 0.15, 0.2, 1)
@@ -79,6 +80,11 @@ camera_path = NodePath("../XRCamera3D")
 [node name="HUDBoard" parent="XROrigin3D" instance=ExtResource("8")]
 camera_path = NodePath("../XRCamera3D")
 
+[node name="CreativeItemIndex" parent="XROrigin3D" instance=ExtResource("12")]
+owner_inventory_path = NodePath("../InventoryController")
+initial_role = 3
+position = Vector3(0, 1.25, -1.0)
+
 [node name="WorldInteraction" type="Node" parent="XROrigin3D"]
 script = ExtResource("6")
 right_controller_path = NodePath("../RightController")
@@ -88,7 +94,6 @@ inventory_path = NodePath("../InventoryController")
 active_equipment_path = NodePath("../ActiveEquipmentController")
 
 [node name="Floor" type="StaticBody3D" parent="."]
-
 [node name="Visual" type="MeshInstance3D" parent="Floor"]
 mesh = SubResource("FloorMesh")
 material_override = SubResource("FloorMat")
