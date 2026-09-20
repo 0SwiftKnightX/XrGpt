@@ -12,7 +12,8 @@ enum TestState {
 	THROW_READY,
 	PROJECTILE_READY,
 	THROWN,
-	PROJECTILE
+	PROJECTILE,
+	FINISHED
 }
 
 @export var left_controller_path: NodePath
@@ -34,6 +35,7 @@ signal test_state_changed(state: TestState)
 signal test_action_fired(action_name: String)
 
 func _ready() -> void:
+	super._ready()
 	_base_scale = scale
 	ensure_item_instance("test.black_cube", "player_1")
 	var projectile := get_node_or_null("ProjectileRuntime") as XRGptProjectileRuntime
