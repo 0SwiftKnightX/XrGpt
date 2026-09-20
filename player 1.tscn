@@ -1,4 +1,8 @@
-[gd_scene format=3 uid="uid://dqilakjuye5cy"]
+[gd_scene load_steps=6 format=3 uid="uid://dqilakjuye5cy"]
+
+[ext_resource type="PackedScene" uid="uid://bq86r4yll8po" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/left_fullglove_low.tscn" id="1_left_hand"]
+[ext_resource type="PackedScene" uid="uid://d1tl07geqm5xq" path="res://addons/godot-xr-tools/hands/scenes/highpoly/right_fullglove_hand.tscn" id="2_right_hand"]
+[ext_resource type="PackedScene" uid="uid://b4ysuyuy6j0" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="3_pickup"]
 
 [node name="XROrigin3D" type="XROrigin3D"]
 
@@ -6,6 +10,16 @@
 
 [node name="LeftController" type="XRController3D" parent="."]
 tracker = &"left_hand"
+pose = &"default"
+
+[node name="LeftHand" parent="LeftController" instance=ExtResource("1_left_hand")]
+
+[node name="LeftPickup" parent="LeftController" instance=ExtResource("3_pickup")]
 
 [node name="RightController" type="XRController3D" parent="."]
 tracker = &"right_hand"
+pose = &"default"
+
+[node name="RightHand" parent="RightController" instance=ExtResource("2_right_hand")]
+
+[node name="RightPickup" parent="RightController" instance=ExtResource("3_pickup")]
