@@ -73,6 +73,16 @@ func remove_item_instance(instance: XRGptItemInstance) -> bool:
 	item_removed.emit(instance, slot)
 	return true
 
+func place_item_in_slot(instance: XRGptItemInstance, slot: XRGptItemSlot) -> bool:
+	if instance == null or slot == null:
+		return false
+	if not slot.set_item(instance):
+		return false
+	if not items.has(instance):
+		items.append(instance)
+	item_added.emit(instance, slot)
+	return true
+
 func return_active_item(instance: XRGptItemInstance) -> bool:
 	var added := add_item_instance(instance)
 	if added:
