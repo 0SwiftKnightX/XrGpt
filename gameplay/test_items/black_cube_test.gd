@@ -146,4 +146,5 @@ func _on_projectile_started() -> void:
 	_set_state(TestState.PROJECTILE)
 
 func _on_projectile_finished(reason: String) -> void:
+	_set_state(TestState.FINISHED)
 	test_action_fired.emit("projectile_finished:" + reason)
