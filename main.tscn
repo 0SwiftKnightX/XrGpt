@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cqow47bch5ocs"]
+[gd_scene load_steps=16 format=3 uid="uid://cqow47bch5ocs"]
 
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://dqilakjuye5cy" path="res://player 1.tscn" id="2"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://gameplay/hud/hud_board.tscn" id="8"]
 [ext_resource type="Script" path="res://gameplay/world/day_night_cycle.gd" id="9"]
 [ext_resource type="Script" path="res://gameplay/world/light_exposure.gd" id="10"]
+[ext_resource type="PackedScene" path="res://gameplay/test_items/black_cube_test.tscn" id="11"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_horizon_color = Color(0.12, 0.15, 0.2, 1)
@@ -66,7 +67,7 @@ shadow_enabled = true
 script = ExtResource("10")
 
 [node name="XROrigin3D" parent="." instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0.5, 0)
 
 [node name="InventoryController" parent="XROrigin3D" instance=ExtResource("5")]
 left_controller_path = NodePath("../LeftController")
@@ -94,6 +95,9 @@ material_override = SubResource("FloorMat")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
 shape = SubResource("FloorShape")
+
+[node name="BlackCubeTest" parent="." instance=ExtResource("11")]
+position = Vector3(0, 0.2, -1.2)
 
 [node name="RockBlockA" parent="." instance=ExtResource("3")]
 position = Vector3(-1.2, 0.5, -2.6)
