@@ -6,6 +6,10 @@ extends Node3D
 var permissions := XRGptPlayerPermissions.new()
 var catalog: Array[XRGptItemDefinition] = []
 
+signal item_created(instance: XRGptItemInstance)
+signal world_item_generated(instance: XRGptItemInstance, world_item: Node3D)
+signal world_item_spawned(instance: XRGptItemInstance, world_item: Node3D)
+
 func _ready() -> void:
 	permissions.set_role_authoritative(initial_role)
 	_refresh_catalog()
@@ -48,15 +52,24 @@ func create_item(definition: XRGptItemDefinition, owner_id: String) -> XRGptItem
 	var inventory := get_node_or_null(owner_inventory_path)
 	if inventory and inventory.has_method("add_item_instance"):
 		if inventory.add_item_instance(instance):
+			item_created.emit(instance)
 			return instance
 	return null
 
 func generate_world_item(definition: XRGptItemDefinition, owner_id: String = "player_1") -> Node3D:
 	if not can_open() or definition == null:
 		return null
-	return XRGptItemRuntime.spawn_definition(definition, owner_id, get_tree().current_scene)
+	var instance := XRGptItemInstance.new()
+	instance.setup(definition, owner_id)
+	var world_item := XRGptItemRuntime.spawn_instance(instance, get_tree().current_scene)
+	if world_item != null:
+		world_item_generated.emit(instance, world_item)
+	return world_item
 
 func spawn_item_instance(instance: XRGptItemInstance) -> Node3D:
 	if not can_open() or instance == null:
 		return null
-	return XRGptItemRuntime.spawn_instance(instance, get_tree().current_scene)
+	var world_item := XRGptItemRuntime.spawn_instance(instance, get_tree().current_scene)
+	if world_item != null:
+		world_item_spawned.emit(instance, world_item)
+	return world_item
