@@ -1,8 +1,21 @@
-[gd_scene load_steps=6 format=3 uid="uid://dqilakjuye5cy"]
+[gd_scene load_steps=7 format=3 uid="uid://dqilakjuye5cy"]
 
 [ext_resource type="PackedScene" uid="uid://bq86r4yll8po" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/left_fullglove_low.tscn" id="1_left_hand"]
 [ext_resource type="PackedScene" uid="uid://d1tl07geqm5xq" path="res://addons/godot-xr-tools/hands/scenes/highpoly/right_fullglove_hand.tscn" id="2_right_hand"]
 [ext_resource type="PackedScene" uid="uid://b4ysuyuy6j0" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="3_pickup"]
+[ext_resource type="Script" path="res://gameplay/interaction/xr_ray_pointer.gd" id="4_ray"]
+
+[sub_resource type="CylinderMesh" id="RayMesh"]
+top_radius = 0.006
+bottom_radius = 0.006
+height = 1.0
+radial_segments = 8
+
+[sub_resource type="StandardMaterial3D" id="RayMat"]
+albedo_color = Color(0.8, 0.9, 1, 0.55)
+emission_enabled = true
+emission = Color(0.4, 0.6, 1, 1)
+transparency = 1
 
 [node name="XROrigin3D" type="XROrigin3D"]
 
@@ -23,3 +36,11 @@ pose = &"default"
 [node name="RightHand" parent="RightController" instance=ExtResource("2_right_hand")]
 
 [node name="RightPickup" parent="RightController" instance=ExtResource("3_pickup")]
+
+[node name="RayPointer" type="Node3D" parent="RightController"]
+script = ExtResource("4_ray")
+
+[node name="Ray" type="MeshInstance3D" parent="RightController/RayPointer"]
+rotation_degrees = Vector3(-90, 0, 0)
+mesh = SubResource("RayMesh")
+material_override = SubResource("RayMat")
