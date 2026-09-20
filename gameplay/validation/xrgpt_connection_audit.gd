@@ -77,5 +77,21 @@ static func _check_main_connections(root: Node, errors: Array[String]) -> void:
 	var right := xr_origin.get_node_or_null("RightController") as XRController3D
 	if left == null:
 		errors.append("LEFT_CONTROLLER_MISSING")
+	else:
+		_check_pickup_function(left, "LEFT", errors)
 	if right == null:
 		errors.append("RIGHT_CONTROLLER_MISSING")
+	else:
+		_check_pickup_function(right, "RIGHT", errors)
+
+static func _check_pickup_function(controller: XRController3D, label: String, errors: Array[String]) -> void:
+	var pickup := XRToolsFunctionPickup.find_instance(controller)
+	if pickup == null:
+		errors.append(label + "_PICKUP_FUNCTION_MISSING")
+		return
+	if not pickup.has_method("drop_object"):
+		errors.append(label + "_PICKUP_DROP_API_MISSING")
+	if pickup.grab_collision_mask & 4 == 0:
+		errors.append(label + "_PICKUP_GRAB_MASK_EXCLUDES_LAYER_3")
+	if pickup.ranged_collision_mask & 4 == 0:
+		errors.append(label + "_PICKUP_RANGED_MASK_EXCLUDES_LAYER_3")
