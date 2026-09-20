@@ -2,7 +2,7 @@ class_name XRGptWorldInteraction
 extends Node
 
 ## Right Quest controller interaction ray.
-## Trigger can mine/collect world drops or physically move inventory items.
+## Trigger can mine/collect world drops, move inventory items, or activate creative items.
 
 @export var right_controller_path: NodePath
 @export var left_controller_path: NodePath
@@ -56,6 +56,11 @@ func _try_grab_or_world_interaction() -> void:
 		return
 
 	var collider := hit.get("collider") as Node
+	var creative_button := _find_creative_button(collider)
+	if creative_button != null:
+		creative_button.activate()
+		return
+
 	if collider is XRGptItemDrop:
 		_collect_drop(collider as XRGptItemDrop)
 		return
@@ -77,6 +82,14 @@ func _find_item_slot(node: Node) -> XRGptItemSlot:
 	while current != null:
 		if current is XRGptItemSlot:
 			return current as XRGptItemSlot
+		current = current.get_parent()
+	return null
+
+func _find_creative_button(node: Node) -> XRGptCreativeItemButton:
+	var current := node
+	while current != null:
+		if current is XRGptCreativeItemButton:
+			return current as XRGptCreativeItemButton
 		current = current.get_parent()
 	return null
 
