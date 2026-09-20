@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="XRGptItemDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://gameplay/items/item_definition.gd" id="1_definition"]
+
+[resource]
+script = ExtResource("1_definition")
+item_id = "black_cube_test"
+display_name = "BLACK CUBE"
+category = "Test"
+rarity = "Test"
+description = "Dedicated XR physics test cube. Place, stack, hold, throw, or launch as a projectile."
+max_stack = 1
+auto_collect = false
+first_claim_relinquishable = false
+mailbox_on_full = false
+tradeable = false
+stealable = false
