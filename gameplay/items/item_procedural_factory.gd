@@ -5,23 +5,25 @@ extends RefCounted
 ## Item geometry, collision, and special behavior are assembled from scripts;
 ## no imported model/texture asset is required.
 
-static func create_world_item(definition: XRGptItemDefinition, owner_id: String = "player_1") -> Node3D:
+static func create_world_item(definition: XRGptItemDefinition, owner_id: String = "player_1", instance: XRGptItemInstance = null) -> Node3D:
 	if definition == null:
 		return null
 
 	match definition.item_id:
 		"block.rock":
-			return _create_physical_block(definition, owner_id, Vector3(1.0, 1.0, 1.0), Color(0.29, 0.27, 0.24), 0.35)
+			return _create_physical_block(definition, owner_id, instance, Vector3(1.0, 1.0, 1.0), Color(0.29, 0.27, 0.24), 0.35)
 		"block.stone":
-			return _create_physical_block(definition, owner_id, Vector3(1.0, 1.0, 1.0), Color(0.46, 0.45, 0.42), 0.45)
+			return _create_physical_block(definition, owner_id, instance, Vector3(1.0, 1.0, 1.0), Color(0.46, 0.45, 0.42), 0.45)
 		"test.black_cube":
-			return _create_black_cube(definition)
+			return _create_black_cube(definition, instance)
 		_:
 			return null
 
-static func _create_physical_block(definition: XRGptItemDefinition, _owner_id: String, size: Vector3, color: Color, mass: float) -> RigidBody3D:
+static func _create_physical_block(definition: XRGptItemDefinition, _owner_id: String, instance: XRGptItemInstance, size: Vector3, color: Color, mass: float) -> RigidBody3D:
 	var body := RigidBody3D.new()
 	body.name = definition.display_name.replace(" ", "") + "Procedural"
+	body.set_script(load("res://gameplay/items/procedural_pickable.gd"))
+	body.set("bind_item_instance", instance)
 	body.mass = mass
 	body.continuous_cd = true
 	body.collision_layer = 4
@@ -47,7 +49,7 @@ static func _create_physical_block(definition: XRGptItemDefinition, _owner_id: S
 
 	return body
 
-static func _create_black_cube(definition: XRGptItemDefinition) -> RigidBody3D:
+static func _create_black_cube(definition: XRGptItemDefinition, instance: XRGptItemInstance) -> RigidBody3D:
 	var body := RigidBody3D.new()
 	body.name = "BlackCubeTestProcedural"
 	body.set_script(load("res://gameplay/test_items/black_cube_test.gd"))
@@ -62,6 +64,7 @@ static func _create_black_cube(definition: XRGptItemDefinition) -> RigidBody3D:
 	body.set("throw_speed", 4.5)
 	body.set("projectile_speed", 8.0)
 	body.set("projectile_max_distance", 10.0)
+	body.set("bind_item_instance", instance)
 	body.set("left_controller_path", NodePath("../XROrigin3D/LeftController"))
 	body.set("right_controller_path", NodePath("../XROrigin3D/RightController"))
 
