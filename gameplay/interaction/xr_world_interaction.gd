@@ -45,8 +45,7 @@ func _handle_trigger(controller: XRController3D, action_name: String) -> void:
 		_try_grab_or_world_interaction()
 
 func _try_grab_or_world_interaction() -> void:
-	_active_controller = controller
-	var hit := _raycast(controller)
+	var hit := _raycast(_active_controller)
 	if hit.is_empty():
 		return
 
