@@ -6,16 +6,24 @@ extends RefCounted
 ## no imported model/texture asset is required.
 
 static func create_world_item(definition: XRGptItemDefinition, owner_id: String = "player_1", instance: XRGptItemInstance = null) -> Node3D:
-	if definition == null:
+	if definition == null or definition.item_id.is_empty():
+		return null
+	var canonical := XRGptItemCatalog.find_definition(definition.item_id)
+	if canonical == null or canonical != definition:
+		return null
+	if instance == null:
+		instance = XRGptItemInstance.new()
+		instance.setup(canonical, owner_id)
+	if instance.definition_id != canonical.item_id or instance.owner_id != owner_id:
 		return null
 
-	match definition.item_id:
+	match canonical.item_id:
 		"block.rock":
-			return _create_physical_block(definition, owner_id, instance, Vector3(1.0, 1.0, 1.0), Color(0.29, 0.27, 0.24), 0.35)
+			return _create_physical_block(canonical, owner_id, instance, Vector3(1.0, 1.0, 1.0), Color(0.29, 0.27, 0.24), 0.35)
 		"block.stone":
-			return _create_physical_block(definition, owner_id, instance, Vector3(1.0, 1.0, 1.0), Color(0.46, 0.45, 0.42), 0.45)
+			return _create_physical_block(canonical, owner_id, instance, Vector3(1.0, 1.0, 1.0), Color(0.46, 0.45, 0.42), 0.45)
 		"test.black_cube":
-			return _create_black_cube(definition, instance)
+			return _create_black_cube(canonical, instance)
 		_:
 			return null
 
