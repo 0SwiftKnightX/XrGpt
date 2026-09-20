@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" path="res://gameplay/blocks/stone_block.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://gameplay/inventory/inventory_controller.tscn" id="5"]
 [ext_resource type="Script" path="res://gameplay/interaction/xr_world_interaction.gd" id="6"]
+[ext_resource type="PackedScene" path="res://gameplay/inventory/active_equipment_controller.tscn" id="7"]
+[ext_resource type="PackedScene" path="res://gameplay/hud/hud_board.tscn" id="8"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_horizon_color = Color(0.12, 0.15, 0.2, 1)
@@ -51,6 +53,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="InventoryController" parent="XROrigin3D" instance=ExtResource("5")]
 left_controller_path = NodePath("../LeftController")
+camera_path = NodePath("../XRCamera3D")
+
+[node name="ActiveEquipmentController" parent="XROrigin3D" instance=ExtResource("7")]
+camera_path = NodePath("../XRCamera3D")
+
+[node name="HUDBoard" parent="XROrigin3D" instance=ExtResource("8")]
 camera_path = NodePath("../XRCamera3D")
 
 [node name="WorldInteraction" type="Node" parent="XROrigin3D"]
