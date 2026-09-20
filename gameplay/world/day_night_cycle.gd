@@ -16,10 +16,12 @@ extends Node3D
 @onready var sun: DirectionalLight3D = $Sun
 @onready var moon: DirectionalLight3D = $Moon
 @onready var sky: Sky = null
+var environment: Environment = null
 
 func _ready() -> void:
 	var environment_node := get_parent().get_node_or_null("WorldEnvironment") as WorldEnvironment
 	if environment_node and environment_node.environment:
+		environment = environment_node.environment
 		sky = environment_node.environment.sky
 	_update_lights()
 
@@ -41,7 +43,11 @@ func _update_lights() -> void:
 	sun.light_energy = sun_energy * daylight
 	moon.light_energy = moon_energy * moonlight
 
-	# Rotate the procedural sky with the celestial cycle.
+	# Rotate the skybox with the celestial cycle.
+	if environment:
+		environment.sky_rotation = Vector3(0.0, (time_of_day / 24.0) * TAU, 0.0)
+
+	# Rotate the procedural sky colors with the celestial cycle.
 	if sky and sky.sky_material is ProceduralSkyMaterial:
 		var material := sky.sky_material as ProceduralSkyMaterial
 		material.sky_top_color = Color(0.025, 0.035, 0.065, 1).lerp(Color(0.18, 0.38, 0.75, 1), daylight)
