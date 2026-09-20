@@ -46,7 +46,7 @@ static func _check_catalog(errors: Array[String]) -> void:
 				errors.append("GENERATED_COLLISION_MISSING: " + definition.item_id)
 			if not generated.has_method("pick_up") or not generated.has_method("can_pick_up"):
 				errors.append("GENERATED_PICKUP_API_MISSING: " + definition.item_id)
-			if generated.collision_layer & 4 == 0:
+			if (generated.collision_layer & 4) == 0:
 				errors.append("GENERATED_PICKUP_LAYER_MISMATCH: " + definition.item_id)
 			generated.free()
 
@@ -95,7 +95,7 @@ static func _check_pickup_function(controller: XRController3D, label: String, er
 		return
 	if not pickup.has_method("drop_object"):
 		errors.append(label + "_PICKUP_DROP_API_MISSING")
-	if pickup.grab_collision_mask & 4 == 0:
+	if (pickup.grab_collision_mask & 4) == 0:
 		errors.append(label + "_PICKUP_GRAB_MASK_EXCLUDES_LAYER_3")
-	if pickup.ranged_collision_mask & 4 == 0:
+	if (pickup.ranged_collision_mask & 4) == 0:
 		errors.append(label + "_PICKUP_RANGED_MASK_EXCLUDES_LAYER_3")
