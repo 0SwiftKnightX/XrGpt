@@ -54,9 +54,9 @@ func create_item(definition: XRGptItemDefinition, owner_id: String) -> XRGptItem
 func generate_world_item(definition: XRGptItemDefinition, owner_id: String = "player_1") -> Node3D:
 	if not can_open() or definition == null:
 		return null
-	return XRGptItemRuntime.spawn_definition(definition, owner_id)
+	return XRGptItemRuntime.spawn_definition(definition, owner_id, get_tree().current_scene)
 
 func spawn_item_instance(instance: XRGptItemInstance) -> Node3D:
 	if not can_open() or instance == null:
 		return null
-	return XRGptItemRuntime.spawn_instance(instance)
+	return XRGptItemRuntime.spawn_instance(instance, get_tree().current_scene)
