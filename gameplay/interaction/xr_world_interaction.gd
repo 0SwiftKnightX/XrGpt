@@ -39,6 +39,7 @@ func _on_left_button_pressed(action_name: String) -> void:
 func _handle_trigger(controller: XRController3D, action_name: String) -> void:
 	if action_name != "trigger_click":
 		return
+	_active_controller = controller
 	if _held_item != null:
 		_release_held_item()
 	else:
