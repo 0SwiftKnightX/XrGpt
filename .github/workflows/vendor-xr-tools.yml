@@ -2,57 +2,36 @@ name: Vendor XR Tools
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
   vendor:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout XrGpt
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       - name: Clone XR Tools fork
         run: git clone --depth 1 --branch master https://github.com/0SwiftKnightX/godot-xr-tools.git /tmp/godot-xr-tools
 
-      - name: Vendor XR Tools addon
+      - name: Vendor addon
         run: |
           rm -rf addons/godot-xr-tools
           mkdir -p addons
           cp -R /tmp/godot-xr-tools/addons/godot-xr-tools addons/godot-xr-tools
-
-      - name: Record upstream attribution
-        run: |
           cp /tmp/godot-xr-tools/LICENSE addons/godot-xr-tools/LICENSE
-          cat > THIRD_PARTY_NOTICES.md <<'EOF'
-# Third-party notices
 
-## Godot XR Tools
-
-XrGpt vendors the Godot XR Tools addon from the public fork:
-
-https://github.com/0SwiftKnightX/godot-xr-tools
-
-Godot XR Tools is licensed under the MIT License. Its copyright and license
-notice are retained in addons/godot-xr-tools/LICENSE.
-
-XrGpt's original game code is separate from this third-party addon.
-EOF
-
-      - name: Commit vendored addon
+      - name: Commit vendor update
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add addons/godot-xr-tools THIRD_PARTY_NOTICES.md
-          if git diff --cached --quiet; then
-            echo "No XR Tools changes to commit."
-            exit 0
-          fi
+          git add addons/godot-xr-tools
+          if git diff --cached --quiet; then exit 0; fi
           git commit -m "Vendor XR Tools fork into XrGpt [skip ci]"
           git push origin HEAD:main
