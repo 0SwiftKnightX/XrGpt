@@ -133,6 +133,8 @@ static func _check_main_connections(root: Node, errors: Array[String]) -> void:
 			errors.append("LEFT_CONTROLLER_PATH_INVALID")
 		if (interaction.interaction_collision_mask & 4) == 0:
 			errors.append("WORLD_INTERACTION_MASK_EXCLUDES_LAYER_3")
+		if (interaction.interaction_collision_mask & 8) == 0:
+			errors.append("WORLD_INTERACTION_MASK_EXCLUDES_LAYER_4")
 
 	var left := xr_origin.get_node_or_null("LeftController") as XRController3D
 	var right := xr_origin.get_node_or_null("RightController") as XRController3D
