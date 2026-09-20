@@ -8,6 +8,32 @@ var item_instance: XRGptItemInstance
 var definition_id := ""
 
 signal inventory_returned(instance: XRGptItemInstance)
+signal xr_picked_up(pickable: XRGptProceduralPickable)
+signal xr_dropped(pickable: XRGptProceduralPickable)
+signal xr_grabbed(pickable: XRGptProceduralPickable, by: Node3D)
+signal xr_released(pickable: XRGptProceduralPickable, by: Node3D)
+
+func _ready() -> void:
+	if not picked_up.is_connected(_on_xr_picked_up):
+		picked_up.connect(_on_xr_picked_up)
+	if not dropped.is_connected(_on_xr_dropped):
+		dropped.connect(_on_xr_dropped)
+	if not grabbed.is_connected(_on_xr_grabbed):
+		grabbed.connect(_on_xr_grabbed)
+	if not released.is_connected(_on_xr_released):
+		released.connect(_on_xr_released)
+
+func _on_xr_picked_up(pickable: XRToolsPickable) -> void:
+	xr_picked_up.emit(pickable as XRGptProceduralPickable)
+
+func _on_xr_dropped(pickable: XRToolsPickable) -> void:
+	xr_dropped.emit(pickable as XRGptProceduralPickable)
+
+func _on_xr_grabbed(pickable: XRToolsPickable, by: Node3D) -> void:
+	xr_grabbed.emit(pickable as XRGptProceduralPickable, by)
+
+func _on_xr_released(pickable: XRToolsPickable, by: Node3D) -> void:
+	xr_released.emit(pickable as XRGptProceduralPickable, by)
 
 func bind_item_instance(instance: XRGptItemInstance) -> void:
 	item_instance = instance
