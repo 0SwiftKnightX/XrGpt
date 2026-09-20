@@ -27,12 +27,15 @@ func can_open() -> bool:
 	return permissions.can_use_creative()
 
 func add_definition(definition: XRGptItemDefinition) -> bool:
-	if definition == null:
+	if definition == null or definition.item_id.is_empty():
+		return false
+	var canonical := XRGptItemCatalog.find_definition(definition.item_id)
+	if canonical == null or canonical != definition:
 		return false
 	for existing in catalog:
 		if existing != null and existing.item_id == definition.item_id:
 			return true
-	catalog.append(definition)
+	catalog.append(canonical)
 	return true
 
 func get_definition(item_id: String) -> XRGptItemDefinition:
@@ -47,8 +50,11 @@ func get_catalog() -> Array[XRGptItemDefinition]:
 func create_item(definition: XRGptItemDefinition, owner_id: String) -> XRGptItemInstance:
 	if not can_open() or definition == null:
 		return null
+	var canonical := XRGptItemCatalog.find_definition(definition.item_id)
+	if canonical == null or canonical != definition:
+		return null
 	var instance := XRGptItemInstance.new()
-	instance.setup(definition, owner_id)
+	instance.setup(canonical, owner_id)
 	var inventory := get_node_or_null(owner_inventory_path)
 	if inventory and inventory.has_method("add_item_instance"):
 		if inventory.add_item_instance(instance):
