@@ -11,7 +11,6 @@ extends XRToolsPickable
 @export var throw_speed := 4.5
 @export var projectile_speed := 8.0
 @export_custom(PROPERTY_HINT_NONE, "suffix:m") var projectile_max_distance := 10.0
-@export_custom(PROPERTY_HINT_NONE, "suffix:m") var projectile_ray_distance := 10.0
 @export_range(0.0, 1.0, 0.05) var opposite_grip_threshold := 0.5
 
 var _trigger_mode := ""
@@ -57,23 +56,17 @@ func _launch_from_opposite_ray(holding_controller: XRController3D) -> void:
 	if pickup == null or pickup.picked_up_object != self:
 		return
 
+	# The existing XR ray pointer uses the controller's -Z axis.
+	# The projectile follows that same physical aiming direction.
 	var direction := -opposite.global_transform.basis.z
-	var query := PhysicsRayQueryParameters3D.create(
-		opposite.global_position,
-		opposite.global_position + direction * projectile_ray_distance
-	)
-	query.exclude = [self]
-	query.collide_with_areas = true
-	var hit := get_world_3d().direct_space_state.intersect_ray(query)
-	if not hit.is_empty():
-		direction = (hit.position - global_position).normalized()
 
 	pickup.drop_object()
-	linear_velocity = direction.normalized() * projectile_speed
 
 	var projectile := get_node_or_null("ProjectileRuntime") as XRGptProjectileRuntime
 	if projectile:
 		projectile.activate(direction, projectile_speed, projectile_max_distance)
+	else:
+		linear_velocity = direction.normalized() * projectile_speed
 
 func _is_opposite_grip_held(holding_controller: XRController3D) -> bool:
 	var opposite := _get_opposite_controller(holding_controller)
