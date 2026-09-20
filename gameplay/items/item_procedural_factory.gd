@@ -77,8 +77,8 @@ static func _create_black_cube(definition: XRGptItemDefinition, instance: XRGptI
 	var pickable := body as XRGptProceduralPickable
 	if pickable != null:
 		pickable.bind_item_instance(instance)
-	body.set("left_controller_path", NodePath("../XROrigin3D/LeftController"))
-	body.set("right_controller_path", NodePath("../XROrigin3D/RightController"))
+	body.set("left_controller_path", NodePath("XROrigin3D/LeftController"))
+	body.set("right_controller_path", NodePath("XROrigin3D/RightController"))
 
 	var mesh := BoxMesh.new()
 	mesh.size = Vector3(0.1, 0.1, 0.1)
