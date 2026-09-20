@@ -9,11 +9,15 @@ extends Node
 @export var max_distance := 8.0
 @export var break_damage := 100.0
 @export var player_id := "player_1"
+@export var inventory_path: NodePath
 
 var _right_controller: XRController3D
+var _inventory: Node
+: XRController3D
 
 func _ready() -> void:
 	_right_controller = get_node_or_null(right_controller_path) as XRController3D
+	_inventory = get_node_or_null(inventory_path)
 	if _right_controller:
 		_right_controller.button_pressed.connect(_on_right_button_pressed)
 
@@ -33,5 +37,21 @@ func _break_target() -> void:
 	if hit.is_empty():
 		return
 	var collider := hit.get("collider") as Node
+	if collider is XRGptItemDrop:
+		_collect_drop(collider as XRGptItemDrop)
+		return
 	if collider is XRGptTerrainBlock:
 		(collider as XRGptTerrainBlock).damage(break_damage, Vector3.ZERO, player_id)
+
+func _collect_drop(drop: XRGptItemDrop) -> void:
+	if not drop.is_owned_by(player_id):
+		return
+	if not drop.auto_collect or _inventory == null:
+		return
+	var instance := XRGptItemInstance.new()
+	instance.definition_id = drop.item_id
+	instance.quantity = drop.quantity
+	instance.owner_id = player_id
+	instance.first_claim_available = drop.first_claim_available
+	if _inventory.has_method("add_item_instance") and _inventory.add_item_instance(instance):
+		drop.queue_free()
