@@ -26,6 +26,8 @@ func configure_drop(p_item_id: String, p_item_name: String, p_owner_id: String, 
 	item_id = p_item_id
 	item_name = p_item_name
 	owner_id = p_owner_id
+	local_player_id = p_owner_id
+	_refresh_visual_state()
 	auto_collect = p_auto_collect
 	relinquishable = p_relinquishable
 
@@ -33,8 +35,8 @@ func launch_from_block(origin: Vector3, direction: Vector3) -> void:
 	global_position = origin
 	var launch_direction := direction.normalized()
 	if launch_direction.length_squared() < 0.01:
-		launch_direction = Vector3.FORWARD
-	apply_central_impulse(launch_direction * 0.9 + Vector3.UP * 1.15)
+		launch_direction = Vector3(randf_range(-1.0, 1.0), 0.0, randf_range(-1.0, 1.0)).normalized()
+	apply_central_impulse(launch_direction * 0.55 + Vector3.UP * 0.85)
 	apply_torque_impulse(Vector3(randf_range(-0.35, 0.35), randf_range(-0.6, 0.6), randf_range(-0.35, 0.35)))
 
 func is_owned_by(local_id: String) -> bool:
