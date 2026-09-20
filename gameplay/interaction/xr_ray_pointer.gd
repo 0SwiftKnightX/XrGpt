@@ -1,15 +1,35 @@
 class_name XRGptRayPointer
 extends Node3D
 
+## Quest controller interaction ray.
+## The ray itself is intentionally simple now; its appearance can be customized later
+## by player settings/items without changing interaction logic.
+
 @export var max_distance := 8.0
 @export var pointer_radius := 0.006
+@export var default_color := Color(0.4, 0.75, 1.0, 0.55)
+@export var hit_color := Color(0.8, 1.0, 0.9, 0.85)
 
 var _ray_mesh: MeshInstance3D
 var _controller: XRController3D
+var _material: StandardMaterial3D
 
 func _ready() -> void:
 	_controller = get_parent() as XRController3D
 	_ray_mesh = get_node_or_null("Ray") as MeshInstance3D
+	if _ray_mesh:
+		_material = _ray_mesh.get_active_material(0) as StandardMaterial3D
+		if _material:
+			_material = _material.duplicate() as StandardMaterial3D
+			_ray_mesh.material_override = _material
+			set_ray_color(default_color)
+
+func set_ray_color(color: Color) -> void:
+	default_color = color
+	if _material:
+		_material.albedo_color = color
+		_material.emission_enabled = true
+		_material.emission = Color(color.r, color.g, color.b, 1.0)
 
 func _process(_delta: float) -> void:
 	if _controller == null or _ray_mesh == null:
