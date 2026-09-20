@@ -34,4 +34,4 @@ func _break_target() -> void:
 		return
 	var collider := hit.get("collider") as Node
 	if collider is XRGptTerrainBlock:
-		(collider as XRGptTerrainBlock).damage(break_damage, direction, player_id)
+		(collider as XRGptTerrainBlock).damage(break_damage, Vector3.ZERO, player_id)
