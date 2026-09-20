@@ -61,3 +61,16 @@ material_override = SubResource("RayMat")
 visible = false
 mesh = SubResource("ReticleMesh")
 material_override = SubResource("ReticleMat")
+[node name="RayPointer" type="Node3D" parent="LeftController"]
+script = ExtResource("4_ray")
+
+[node name="Ray" type="MeshInstance3D" parent="LeftController/RayPointer"]
+rotation_degrees = Vector3(-90, 0, 0)
+mesh = SubResource("RayMesh")
+material_override = SubResource("RayMat")
+
+[node name="Reticle" type="MeshInstance3D" parent="LeftController/RayPointer"]
+visible = false
+mesh = SubResource("ReticleMesh")
+material_override = SubResource("ReticleMat")
+
