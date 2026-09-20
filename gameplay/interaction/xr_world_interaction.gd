@@ -150,6 +150,8 @@ func _release_held_item() -> void:
 			placed = _inventory.place_item_in_slot(_held_item, _origin_slot)
 		elif not _origin_slot.inventory_slot and _active_equipment:
 			placed = _active_equipment.place_item(_held_item)
+		if placed:
+			interaction_succeeded.emit("item_restored_to_origin", _held_item)
 
 	if not placed and _held_item != null:
 		if _inventory and _inventory.add_item_instance(_held_item):
