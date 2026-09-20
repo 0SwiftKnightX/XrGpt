@@ -6,6 +6,8 @@ extends XRToolsPickable
 
 var item_instance: XRGptItemInstance
 var definition_id := ""
+var is_xr_held := false
+var held_by: Node3D
 
 signal inventory_returned(instance: XRGptItemInstance)
 signal xr_picked_up(pickable: XRGptProceduralPickable)
@@ -25,9 +27,13 @@ func _ready() -> void:
 		released.connect(_on_xr_released)
 
 func _on_xr_picked_up(pickable: XRToolsPickable) -> void:
+	is_xr_held = true
+	held_by = pickable.get_picked_up_by()
 	xr_picked_up.emit(pickable as XRGptProceduralPickable)
 
 func _on_xr_dropped(pickable: XRToolsPickable) -> void:
+	is_xr_held = false
+	held_by = null
 	xr_dropped.emit(pickable as XRGptProceduralPickable)
 
 func _on_xr_grabbed(pickable: XRToolsPickable, by: Node3D) -> void:
