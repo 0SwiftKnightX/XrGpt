@@ -13,6 +13,10 @@ var _board: Node3D
 var _camera: XRCamera3D
 var _slots: Array[XRGptItemSlot] = []
 
+signal item_added(instance: XRGptItemInstance, slot: XRGptItemSlot)
+signal item_removed(instance: XRGptItemInstance, slot: XRGptItemSlot)
+signal item_returned(instance: XRGptItemInstance)
+
 func _ready() -> void:
 	_board = get_node_or_null("InventoryBoard")
 	_camera = get_node_or_null(camera_path) as XRCamera3D
@@ -46,19 +50,35 @@ func add_item_instance(instance: XRGptItemInstance) -> bool:
 		return false
 	for slot in _slots:
 		if slot.item == null and slot.set_item(instance):
-			items.append(instance)
+			if not items.has(instance):
+				items.append(instance)
+			item_added.emit(instance, slot)
 			return true
 	return false
 
 func remove_item_instance(instance: XRGptItemInstance) -> bool:
 	var index := items.find(instance)
-	if index >= 0:
-		items.remove_at(index)
-		return true
+	if index < 0:
+		return false
+	var slot := _find_slot_for_instance(instance)
+	items.remove_at(index)
+	if slot != null and slot.item == instance:
+		slot.clear_item()
+	item_removed.emit(instance, slot)
+	return true
 	return false
 
 func return_active_item(instance: XRGptItemInstance) -> bool:
-	return add_item_instance(instance)
+	var added := add_item_instance(instance)
+	if added:
+		item_returned.emit(instance)
+	return added
+
+func _find_slot_for_instance(instance: XRGptItemInstance) -> XRGptItemSlot:
+	for slot in _slots:
+		if slot.item == instance:
+			return slot
+	return null
 
 func get_slots() -> Array[XRGptItemSlot]:
 	return _slots
