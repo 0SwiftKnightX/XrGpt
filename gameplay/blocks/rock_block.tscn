@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://gameplay/blocks/terrain_block.gd" id="1"]
+[ext_resource type="PackedScene" path="res://gameplay/items/rock_drop.tscn" id="2"]
+
+[sub_resource type="StandardMaterial3D" id="RockMat"]
+albedo_color = Color(0.29, 0.27, 0.24, 1)
+roughness = 0.94
+
+[sub_resource type="BoxMesh" id="RockMesh"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="RockShape"]
+size = Vector3(1, 1, 1)
+
+[node name="RockBlock" type="StaticBody3D"]
+script = ExtResource("1")
+item_id = "rock"
+item_name = "Rock"
+max_health = 100.0
+drop_scene = ExtResource("2")
+drop_auto_collect = true
+drop_relinquishable = false
+
+[node name="Visual" type="MeshInstance3D" parent="."]
+mesh = SubResource("RockMesh")
+material_override = SubResource("RockMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("RockShape")
