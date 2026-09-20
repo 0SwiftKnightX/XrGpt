@@ -20,6 +20,11 @@ var _active_equipment: XRGptActiveEquipmentController
 var _held_item: XRGptItemInstance
 var _origin_slot: XRGptItemSlot
 
+signal interaction_succeeded(action_name: String, instance: XRGptItemInstance)
+signal interaction_failed(action_name: String, reason: String)
+signal item_placed(instance: XRGptItemInstance, world_item: Node3D)
+signal item_repicked_up(instance: XRGptItemInstance)
+
 func _ready() -> void:
 	_right_controller = get_node_or_null(right_controller_path) as XRController3D
 	_left_controller = get_node_or_null(left_controller_path) as XRController3D
@@ -116,7 +121,7 @@ func _release_held_item() -> void:
 		placed = true
 		if target.inventory_slot and _inventory:
 			if not _inventory.items.has(_held_item):
-				_inventory.items.append(_held_item)
+				_inventory.add_item_instance(_held_item)
 		elif not target.inventory_slot and _inventory:
 			_inventory.remove_item_instance(_held_item)
 		_held_item = null
@@ -129,11 +134,13 @@ func _release_held_item() -> void:
 	if not placed and _held_item != null and _origin_slot != null and _origin_slot.set_item(_held_item):
 		placed = true
 		if _origin_slot.inventory_slot and _inventory and not _inventory.items.has(_held_item):
-			_inventory.items.append(_held_item)
+			_inventory.add_item_instance(_held_item)
 
 	if not placed and _held_item != null:
 		if _inventory and _inventory.add_item_instance(_held_item):
 			placed = true
+		else:
+			interaction_failed.emit("item_release", "no_valid_destination")
 
 	_held_item = null
 	_origin_slot = null
@@ -151,14 +158,24 @@ func _collect_drop(drop: XRGptItemDrop) -> void:
 	instance.owner_id = player_id
 	instance.first_claim_available = drop.first_claim_available
 	if _inventory.add_item_instance(instance):
+		interaction_succeeded.emit("drop_collected", instance)
 		drop.queue_free()
+	else:
+		interaction_failed.emit("drop_collect", "inventory_full")
 
 func _collect_procedural_item(item: XRGptProceduralPickable) -> bool:
 	if item == null or _inventory == null:
 		return false
 	if item.item_instance == null:
 		return false
-	return item.return_to_inventory(_inventory, player_id)
+	var instance := item.item_instance
+	var returned := item.return_to_inventory(_inventory, player_id)
+	if returned:
+		item_repicked_up.emit(instance)
+		interaction_succeeded.emit("procedural_repickup", instance)
+	else:
+		interaction_failed.emit("procedural_collect", "inventory_full_or_owner_mismatch")
+	return returned
 
 func _place_held_item_in_world(hit: Dictionary) -> bool:
 	if _held_item == null or hit.is_empty():
@@ -172,4 +189,6 @@ func _place_held_item_in_world(hit: Dictionary) -> bool:
 	var normal: Vector3 = hit.get("normal", Vector3.UP)
 	var position: Vector3 = hit.get("position", Vector3.ZERO)
 	world_item.global_position = position + normal.normalized() * 0.06
+	item_placed.emit(_held_item, world_item)
+	interaction_succeeded.emit("item_placed", _held_item)
 	return true
