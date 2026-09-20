@@ -15,7 +15,7 @@ size = Vector3(1, 1, 1)
 
 [node name="RockBlock" type="StaticBody3D"]
 script = ExtResource("1")
-item_id = "rock"
+item_id = "block.rock"
 item_name = "Rock"
 max_health = 100.0
 drop_scene = ExtResource("2")
