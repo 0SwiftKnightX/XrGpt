@@ -81,6 +81,7 @@ camera_path = NodePath("../XRCamera3D")
 [node name="WorldInteraction" type="Node" parent="XROrigin3D"]
 script = ExtResource("6")
 right_controller_path = NodePath("../RightController")
+left_controller_path = NodePath("../LeftController")
 player_id = "player_1"
 inventory_path = NodePath("../InventoryController")
 active_equipment_path = NodePath("../ActiveEquipmentController")
