@@ -1,0 +1,83 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://gameplay/creative/creative_item_index.gd" id="1"]
+[ext_resource type="Resource" path="res://gameplay/items/rock_definition.tres" id="2"]
+[ext_resource type="Resource" path="res://gameplay/items/stone_definition.tres" id="3"]
+
+[sub_resource type="StandardMaterial3D" id="BoardMat"]
+albedo_color = Color(0.035, 0.04, 0.05, 0.98)
+roughness = 0.75
+
+[sub_resource type="BoxMesh" id="BoardMesh"]
+size = Vector3(2.3, 0.05, 1.7)
+
+[sub_resource type="StandardMaterial3D" id="ButtonMat"]
+albedo_color = Color(0.13, 0.16, 0.20, 1)
+
+[sub_resource type="BoxMesh" id="ButtonMesh"]
+size = Vector3(0.85, 0.06, 0.42)
+
+[node name="CreativeItemIndex" type="Node3D"]
+script = ExtResource("1")
+
+[node name="Board" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoardMesh")
+material_override = SubResource("BoardMat")
+
+[node name="Title" type="Label3D" parent="."]
+text = "ADMIN TOOLS  /  CREATIVE  /  ITEM INDEX"
+font_size = 24
+outline_size = 6
+pixel_size = 0.002
+position = Vector3(0, 0.08, -0.72)
+
+[node name="Blocks" type="Label3D" parent="."]
+text = "BLOCKS"
+font_size = 20
+outline_size = 5
+pixel_size = 0.002
+position = Vector3(-0.78, 0.08, -0.45)
+
+[node name="Rock" type="Node3D" parent="."]
+position = Vector3(-0.65, 0.02, -0.08)
+
+[node name="Visual" type="MeshInstance3D" parent="Rock"]
+mesh = SubResource("ButtonMesh")
+material_override = SubResource("ButtonMat")
+
+[node name="Label" type="Label3D" parent="Rock"]
+text = "ROCK"
+font_size = 20
+outline_size = 5
+pixel_size = 0.002
+position = Vector3(0, 0.05, -0.23)
+
+[node name="Stone" type="Node3D" parent="."]
+position = Vector3(0.65, 0.02, -0.08)
+
+[node name="Visual" type="MeshInstance3D" parent="Stone"]
+mesh = SubResource("ButtonMesh")
+material_override = SubResource("ButtonMat")
+
+[node name="Label" type="Label3D" parent="Stone"]
+text = "STONE"
+font_size = 20
+outline_size = 5
+pixel_size = 0.002
+position = Vector3(0, 0.05, -0.23)
+
+[node name="Categories" type="Label3D" parent="."]
+text = "Blocks   Materials   Equipment   Weapons   Gems   Orbs   Consumables   Pets"
+font_size = 14
+outline_size = 4
+pixel_size = 0.0016
+position = Vector3(0, 0.08, 0.45)
+
+[node name="Status" type="Label3D" parent="."]
+text = "MOD / ADMIN ACCESS REQUIRED"
+font_size = 14
+outline_size = 4
+pixel_size = 0.0016
+position = Vector3(0, 0.08, 0.65)
+
+[connection type="ready" from="." to="." method="_on_ready"]
