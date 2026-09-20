@@ -18,11 +18,16 @@ collision_layer = 4
 collision_mask = 5
 mass = 0.05
 continuous_cd = true
+linear_damp = 0.05
+angular_damp = 0.15
 script = ExtResource("1_cube")
 press_to_hold = true
 ranged_grab_method = 1
 left_controller_path = NodePath("../XROrigin3D/LeftController")
 right_controller_path = NodePath("../XROrigin3D/RightController")
+throw_speed = 4.5
+projectile_speed = 8.0
+projectile_max_distance = 10.0
 
 [node name="Visual" type="MeshInstance3D" parent="."]
 mesh = SubResource("CubeMesh")
@@ -43,3 +48,7 @@ billboard = 1
 script = ExtResource("2_projectile")
 max_distance = 10.0
 destroy_on_impact = true
+launch_speed = 8.0
+gravity_scale = 1.0
+linear_damp = 0.05
+angular_damp = 0.15
