@@ -1,6 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://gameplay/inventory/inventory_controller.gd" id="1"]
+[ext_resource type="Script" path="res://gameplay/inventory/item_slot.gd" id="2"]
+
+[sub_resource type="BoxShape3D" id="SlotShape"]
+size = Vector3(0.34, 0.08, 0.34)
 
 [sub_resource type="StandardMaterial3D" id="BoardMat"]
 albedo_color = Color(0.06, 0.07, 0.09, 0.96)
@@ -45,56 +49,160 @@ pixel_size = 0.0025
 position = Vector3(0, 0.08, -0.58)
 
 [node name="InventorySlot01" type="Node3D" parent="."]
+script = ExtResource("2")
+slot_id = "01"
 position = Vector3(-0.72, 0.09, -0.25)
+
+[node name="Interaction" type="Area3D" parent="InventorySlot01"]
+collision_layer = 4
+collision_mask = 0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot01/Interaction"]
+shape = SubResource("SlotShape")
+
+[node name="ItemLabel" type="Label3D" parent="InventorySlot01"]
+font_size = 12
+pixel_size = 0.0018
+position = Vector3(0, 0.08, 0)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot01"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot02" type="Node3D" parent="."]
+script = ExtResource("2")
+slot_id = "02"
 position = Vector3(-0.24, 0.09, -0.25)
+
+[node name="Interaction" type="Area3D" parent="InventorySlot02"]
+collision_layer = 4
+collision_mask = 0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot02/Interaction"]
+shape = SubResource("SlotShape")
+
+[node name="ItemLabel" type="Label3D" parent="InventorySlot02"]
+font_size = 12
+pixel_size = 0.0018
+position = Vector3(0, 0.08, 0)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot02"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot03" type="Node3D" parent="."]
+script = ExtResource("2")
+slot_id = "03"
 position = Vector3(0.24, 0.09, -0.25)
+
+[node name="Interaction" type="Area3D" parent="InventorySlot03"]
+collision_layer = 4
+collision_mask = 0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot03/Interaction"]
+shape = SubResource("SlotShape")
+
+[node name="ItemLabel" type="Label3D" parent="InventorySlot03"]
+font_size = 12
+pixel_size = 0.0018
+position = Vector3(0, 0.08, 0)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot03"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot04" type="Node3D" parent="."]
+script = ExtResource("2")
+slot_id = "04"
 position = Vector3(0.72, 0.09, -0.25)
+
+[node name="Interaction" type="Area3D" parent="InventorySlot04"]
+collision_layer = 4
+collision_mask = 0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot04/Interaction"]
+shape = SubResource("SlotShape")
+
+[node name="ItemLabel" type="Label3D" parent="InventorySlot04"]
+font_size = 12
+pixel_size = 0.0018
+position = Vector3(0, 0.08, 0)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot04"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot05" type="Node3D" parent="."]
+script = ExtResource("2")
+slot_id = "05"
 position = Vector3(-0.72, 0.09, 0.25)
+
+[node name="Interaction" type="Area3D" parent="InventorySlot05"]
+collision_layer = 4
+collision_mask = 0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot05/Interaction"]
+shape = SubResource("SlotShape")
+
+[node name="ItemLabel" type="Label3D" parent="InventorySlot05"]
+font_size = 12
+pixel_size = 0.0018
+position = Vector3(0, 0.08, 0)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot05"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot06" type="Node3D" parent="."]
+script = ExtResource("2")
+slot_id = "06"
 position = Vector3(-0.24, 0.09, 0.25)
+
+[node name="Interaction" type="Area3D" parent="InventorySlot06"]
+collision_layer = 4
+collision_mask = 0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot06/Interaction"]
+shape = SubResource("SlotShape")
+
+[node name="ItemLabel" type="Label3D" parent="InventorySlot06"]
+font_size = 12
+pixel_size = 0.0018
+position = Vector3(0, 0.08, 0)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot06"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot07" type="Node3D" parent="."]
+script = ExtResource("2")
+slot_id = "07"
 position = Vector3(0.24, 0.09, 0.25)
+
+[node name="Interaction" type="Area3D" parent="InventorySlot07"]
+collision_layer = 4
+collision_mask = 0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot07/Interaction"]
+shape = SubResource("SlotShape")
+
+[node name="ItemLabel" type="Label3D" parent="InventorySlot07"]
+font_size = 12
+pixel_size = 0.0018
+position = Vector3(0, 0.08, 0)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot07"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
 [node name="InventorySlot08" type="Node3D" parent="."]
+script = ExtResource("2")
+slot_id = "08"
 position = Vector3(0.72, 0.09, 0.25)
+
+[node name="Interaction" type="Area3D" parent="InventorySlot08"]
+collision_layer = 4
+collision_mask = 0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot08/Interaction"]
+shape = SubResource("SlotShape")
+
+[node name="ItemLabel" type="Label3D" parent="InventorySlot08"]
+font_size = 12
+pixel_size = 0.0018
+position = Vector3(0, 0.08, 0)
 
 [node name="Visual" type="MeshInstance3D" parent="InventorySlot08"]
 mesh = SubResource("SlotMesh")
