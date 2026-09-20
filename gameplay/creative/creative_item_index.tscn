@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://gameplay/creative/creative_item_index.gd" id="1"]
 [ext_resource type="Script" path="res://gameplay/creative/creative_item_button.gd" id="4"]
 [ext_resource type="Resource" path="res://gameplay/items/rock_definition.tres" id="2"]
 [ext_resource type="Resource" path="res://gameplay/items/stone_definition.tres" id="3"]
+[ext_resource type="Resource" path="res://gameplay/items/black_cube_test_item.tres" id="5"]
 
 [sub_resource type="StandardMaterial3D" id="BoardMat"]
 albedo_color = Color(0.035, 0.04, 0.05, 0.98)
@@ -17,6 +18,9 @@ albedo_color = Color(0.13, 0.16, 0.20, 1)
 
 [sub_resource type="BoxMesh" id="ButtonMesh"]
 size = Vector3(0.85, 0.06, 0.42)
+
+[sub_resource type="BoxShape3D" id="ButtonShape"]
+size = Vector3(0.85, 0.08, 0.42)
 
 [node name="CreativeItemIndex" type="Node3D"]
 script = ExtResource("1")
@@ -49,6 +53,13 @@ creative_index_path = NodePath("..")
 mesh = SubResource("ButtonMesh")
 material_override = SubResource("ButtonMat")
 
+[node name="Interaction" type="Area3D" parent="Rock"]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rock/Interaction"]
+shape = SubResource("ButtonShape")
+
 [node name="Label" type="Label3D" parent="Rock"]
 text = "ROCK"
 font_size = 20
@@ -66,9 +77,40 @@ creative_index_path = NodePath("..")
 mesh = SubResource("ButtonMesh")
 material_override = SubResource("ButtonMat")
 
+[node name="Interaction" type="Area3D" parent="Stone"]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Stone/Interaction"]
+shape = SubResource("ButtonShape")
+
 [node name="Label" type="Label3D" parent="Stone"]
 text = "STONE"
 font_size = 20
+outline_size = 5
+pixel_size = 0.002
+position = Vector3(0, 0.05, -0.23)
+
+[node name="BlackCube" type="Node3D" parent="."]
+position = Vector3(0, 0.02, 0.24)
+script = ExtResource("4")
+item_definition = ExtResource("5")
+creative_index_path = NodePath("..")
+
+[node name="Visual" type="MeshInstance3D" parent="BlackCube"]
+mesh = SubResource("ButtonMesh")
+material_override = SubResource("ButtonMat")
+
+[node name="Interaction" type="Area3D" parent="BlackCube"]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BlackCube/Interaction"]
+shape = SubResource("ButtonShape")
+
+[node name="Label" type="Label3D" parent="BlackCube"]
+text = "BLACK CUBE"
+font_size = 18
 outline_size = 5
 pixel_size = 0.002
 position = Vector3(0, 0.05, -0.23)
@@ -86,4 +128,3 @@ font_size = 14
 outline_size = 4
 pixel_size = 0.0016
 position = Vector3(0, 0.08, 0.65)
-
