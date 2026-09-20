@@ -48,6 +48,8 @@ static func _check_catalog(errors: Array[String]) -> void:
 				errors.append("GENERATED_PICKUP_API_MISSING: " + definition.item_id)
 			if (generated.collision_layer & 4) == 0:
 				errors.append("GENERATED_PICKUP_LAYER_MISMATCH: " + definition.item_id)
+			if generated.get_parent() != null:
+				generated.get_parent().remove_child(generated)
 			generated.free()
 
 static func _check_main_connections(root: Node, errors: Array[String]) -> void:
