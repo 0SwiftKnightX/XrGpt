@@ -4,7 +4,7 @@ extends StaticBody3D
 ## Base terrain block. The block is the world representation;
 ## breaking it creates a separate physical item drop.
 
-@export var item_id := "rock"
+@export var item_id := "block.rock"
 @export var item_name := "Rock"
 @export var max_health := 100.0
 @export var drop_scene: PackedScene
