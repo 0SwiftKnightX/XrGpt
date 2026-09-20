@@ -7,7 +7,7 @@ extends Node
 @export var right_controller_path: NodePath
 @export var left_controller_path: NodePath
 @export var max_distance := 1.0
-@export_flags_3d_physics var interaction_collision_mask := 5
+@export_flags_3d_physics var interaction_collision_mask := 13
 @export var break_damage := 100.0
 @export var player_id := "player_1"
 @export var inventory_path: NodePath
@@ -138,7 +138,7 @@ func _release_held_item() -> void:
 		if target.inventory_slot and _inventory:
 			placed = _inventory.place_item_in_slot(_held_item, target)
 		elif not target.inventory_slot and _active_equipment:
-			placed = _active_equipment.place_item(_held_item)
+			placed = _active_equipment.place_item_in_slot(_held_item, target)
 		if placed:
 			interaction_succeeded.emit("item_slot_placed", _held_item)
 			_held_item = null
@@ -152,7 +152,7 @@ func _release_held_item() -> void:
 		if _origin_slot.inventory_slot and _inventory:
 			placed = _inventory.place_item_in_slot(_held_item, _origin_slot)
 		elif not _origin_slot.inventory_slot and _active_equipment:
-			placed = _active_equipment.place_item(_held_item)
+			placed = _active_equipment.place_item_in_slot(_held_item, _origin_slot)
 		if placed:
 			interaction_succeeded.emit("item_restored_to_origin", _held_item)
 
