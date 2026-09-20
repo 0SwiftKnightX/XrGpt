@@ -1,11 +1,17 @@
-[gd_scene format=3 uid="uid://cqow47bch5ocs"]
+[gd_scene load_steps=12 format=3 uid="uid://cqow47bch5ocs"]
 
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://dqilakjuye5cy" path="res://player 1.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://gameplay/blocks/rock_block.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://gameplay/blocks/stone_block.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://gameplay/inventory/inventory_controller.tscn" id="5"]
+[ext_resource type="Script" path="res://gameplay/interaction/xr_world_interaction.gd" id="6"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+sky_horizon_color = Color(0.12, 0.15, 0.2, 1)
+sky_top_color = Color(0.025, 0.035, 0.065, 1)
+ground_horizon_color = Color(0.08, 0.075, 0.07, 1)
+ground_bottom_color = Color(0.025, 0.025, 0.025, 1)
 
 [sub_resource type="Sky" id="Sky"]
 sky_material = SubResource("SkyMat")
@@ -13,9 +19,20 @@ sky_material = SubResource("SkyMat")
 [sub_resource type="Environment" id="Environment"]
 background_mode = 2
 sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_color = Color(0.3, 0.32, 0.38, 1)
+ambient_light_energy = 0.55
+tonemap_mode = 2
 
 [sub_resource type="PlaneMesh" id="FloorMesh"]
-size = Vector2(9, 9)
+size = Vector2(14, 14)
+
+[sub_resource type="BoxShape3D" id="FloorShape"]
+size = Vector3(14, 0.1, 14)
+
+[sub_resource type="StandardMaterial3D" id="FloorMat"]
+albedo_color = Color(0.17, 0.16, 0.14, 1)
+roughness = 1.0
 
 [node name="Main" type="Node3D"]
 
@@ -23,6 +40,8 @@ size = Vector2(9, 9)
 environment = SubResource("Environment")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-48, -28, 0)
+light_energy = 1.2
 shadow_enabled = true
 
 [node name="StartXR" parent="." instance=ExtResource("1")]
@@ -30,5 +49,38 @@ shadow_enabled = true
 [node name="XROrigin3D" parent="." instance=ExtResource("2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
-[node name="Floor" type="MeshInstance3D" parent="."]
+[node name="InventoryController" parent="XROrigin3D" instance=ExtResource("5")]
+left_controller_path = NodePath("../LeftController")
+camera_path = NodePath("../XRCamera3D")
+
+[node name="WorldInteraction" type="Node" parent="XROrigin3D"]
+script = ExtResource("6")
+right_controller_path = NodePath("../RightController")
+player_id = "player_1"
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="Visual" type="MeshInstance3D" parent="Floor"]
 mesh = SubResource("FloorMesh")
+material_override = SubResource("FloorMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("FloorShape")
+
+[node name="RockBlockA" parent="." instance=ExtResource("3")]
+position = Vector3(-1.2, 0.5, -2.6)
+
+[node name="RockBlockB" parent="." instance=ExtResource("3")]
+position = Vector3(-0.1, 0.5, -2.6)
+
+[node name="RockBlockC" parent="." instance=ExtResource("3")]
+position = Vector3(1.0, 0.5, -2.6)
+
+[node name="StoneBlockA" parent="." instance=ExtResource("4")]
+position = Vector3(-0.65, 1.5, -2.6)
+
+[node name="StoneBlockB" parent="." instance=ExtResource("4")]
+position = Vector3(0.45, 1.5, -2.6)
+
+[node name="StoneBlockC" parent="." instance=ExtResource("4")]
+position = Vector3(1.55, 0.5, -2.6)
