@@ -1,3 +1,4 @@
+@tool
 class_name XRGptProceduralPickable
 extends XRToolsPickable
 
@@ -7,7 +8,7 @@ extends XRToolsPickable
 var item_instance: XRGptItemInstance
 var definition_id := ""
 var is_xr_held := false
-var held_by: Node3D
+var held_by: Node3D = null
 
 signal inventory_returned(instance: XRGptItemInstance)
 signal xr_picked_up(pickable: XRGptProceduralPickable)
@@ -28,7 +29,7 @@ func _ready() -> void:
 
 func _on_xr_picked_up(pickable: XRToolsPickable) -> void:
 	is_xr_held = true
-	held_by = pickable.get_picked_up_by()
+	held_by = pickable.get_picked_up_by() as Node3D
 	xr_picked_up.emit(pickable as XRGptProceduralPickable)
 
 func _on_xr_dropped(pickable: XRToolsPickable) -> void:
@@ -52,10 +53,10 @@ func ensure_item_instance(default_item_id: String = "", owner_id: String = "play
 	var resolved_id := definition_id if not definition_id.is_empty() else default_item_id
 	if resolved_id.is_empty():
 		return null
-	var definition := XRGptItemCatalog.find_definition(resolved_id)
+	var definition: XRGptItemDefinition = XRGptItemCatalog.find_definition(resolved_id)
 	if definition == null:
 		return null
-	var instance := XRGptItemInstance.new()
+	var instance: XRGptItemInstance = XRGptItemInstance.new()
 	instance.setup(definition, owner_id)
 	bind_item_instance(instance)
 	return item_instance
