@@ -6,6 +6,7 @@ extends Node3D
 ## by player settings/items without changing interaction logic.
 
 @export var max_distance := 8.0
+@export_flags_3d_physics var pointer_collision_mask := 13
 @export var pointer_radius := 0.006
 @export var default_color := Color(0.4, 0.75, 1.0, 0.55)
 @export var hit_color := Color(0.8, 1.0, 0.9, 0.85)
@@ -53,6 +54,8 @@ func _process(_delta: float) -> void:
 	var direction := -_controller.global_transform.basis.z
 	var query := PhysicsRayQueryParameters3D.create(from, from + direction * max_distance)
 	query.collide_with_areas = true
+	query.collide_with_bodies = true
+	query.collision_mask = pointer_collision_mask
 	var hit := get_viewport().get_world_3d().direct_space_state.intersect_ray(query)
 	var distance := max_distance
 	if not hit.is_empty():
