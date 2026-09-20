@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="XRGptItemDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://gameplay/items/item_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = "block.rock"
+display_name = "Rock"
+category = "Blocks"
+rarity = "Common"
+description = "A common rock block."
+max_stack = 999
+auto_collect = true
+first_claim_relinquishable = false
+mailbox_on_full = false
+tradeable = true
+stealable = false
