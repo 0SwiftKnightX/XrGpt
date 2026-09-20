@@ -5,6 +5,7 @@ extends Node
 ## Trigger can mine/collect world drops or physically move inventory items.
 
 @export var right_controller_path: NodePath
+@export var left_controller_path: NodePath
 @export var max_distance := 8.0
 @export var break_damage := 100.0
 @export var player_id := "player_1"
@@ -12,6 +13,8 @@ extends Node
 @export var active_equipment_path: NodePath
 
 var _right_controller: XRController3D
+var _left_controller: XRController3D
+var _active_controller: XRController3D
 var _inventory: XRGptInventoryController
 var _active_equipment: XRGptActiveEquipmentController
 var _held_item: XRGptItemInstance
@@ -19,12 +22,21 @@ var _origin_slot: XRGptItemSlot
 
 func _ready() -> void:
 	_right_controller = get_node_or_null(right_controller_path) as XRController3D
+	_left_controller = get_node_or_null(left_controller_path) as XRController3D
 	_inventory = get_node_or_null(inventory_path) as XRGptInventoryController
 	_active_equipment = get_node_or_null(active_equipment_path) as XRGptActiveEquipmentController
 	if _right_controller:
 		_right_controller.button_pressed.connect(_on_right_button_pressed)
+	if _left_controller:
+		_left_controller.button_pressed.connect(_on_left_button_pressed)
 
 func _on_right_button_pressed(action_name: String) -> void:
+	_handle_trigger(_right_controller, action_name)
+
+func _on_left_button_pressed(action_name: String) -> void:
+	_handle_trigger(_left_controller, action_name)
+
+func _handle_trigger(controller: XRController3D, action_name: String) -> void:
 	if action_name != "trigger_click":
 		return
 	if _held_item != null:
@@ -33,7 +45,8 @@ func _on_right_button_pressed(action_name: String) -> void:
 		_try_grab_or_world_interaction()
 
 func _try_grab_or_world_interaction() -> void:
-	var hit := _raycast()
+	_active_controller = controller
+	var hit := _raycast(controller)
 	if hit.is_empty():
 		return
 
@@ -49,11 +62,12 @@ func _try_grab_or_world_interaction() -> void:
 	if collider is XRGptTerrainBlock:
 		(collider as XRGptTerrainBlock).damage(break_damage, Vector3.ZERO, player_id)
 
-func _raycast() -> Dictionary:
-	if _right_controller == null:
+func _raycast(controller: XRController3D = null) -> Dictionary:
+	var source := controller if controller != null else _active_controller
+	if source == null:
 		return {}
-	var from := _right_controller.global_position
-	var direction := -_right_controller.global_transform.basis.z
+	var from := source.global_position
+	var direction := -source.global_transform.basis.z
 	var query := PhysicsRayQueryParameters3D.create(from, from + direction * max_distance)
 	query.collide_with_areas = true
 	return get_viewport().get_world_3d().direct_space_state.intersect_ray(query)
