@@ -17,6 +17,8 @@ var _settled := false
 var _rotation_speed := 1.4
 
 func _ready() -> void:
+	can_sleep = false
+	angular_damp = 0.15
 	angular_velocity = Vector3(0.0, _rotation_speed, 0.0)
 	body_entered.connect(_on_body_entered)
 
@@ -47,6 +49,10 @@ func _refresh_visual_state() -> void:
 	if visual == null:
 		return
 	var material := visual.get_active_material(0) as StandardMaterial3D
+	if material == null:
+		return
+	material = material.duplicate() as StandardMaterial3D
+	visual.material_override = material
 	if material == null:
 		return
 	material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED if is_owned_by(local_player_id) else BaseMaterial3D.TRANSPARENCY_ALPHA
