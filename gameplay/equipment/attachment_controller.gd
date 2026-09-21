@@ -111,7 +111,7 @@ func _has_occupied_compatible_attachment(slot: XRGptItemSlot) -> bool:
 		if not point.slot_ids.is_empty() and not point.slot_ids.has(slot.slot_id):
 			continue
 		var previous_slot_id := point.current_slot_id
-		if previous_slot_id.is_empty() or previous_slot_id == slot.slot_id:
+		if not point.exclusive or previous_slot_id.is_empty() or previous_slot_id == slot.slot_id:
 			continue
 		point.current_slot_id = ""
 		var compatible := point.can_attach_for_slot(slot.item, slot.slot_id)
