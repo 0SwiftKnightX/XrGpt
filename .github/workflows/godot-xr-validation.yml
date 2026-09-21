@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: read
+  id-token: write
+  attestations: write
 
 jobs:
   validate:
@@ -79,3 +81,7 @@ jobs:
             echo "- Phase 1 attachment regression: required PASS_1 + PASS_2 + PASS_3"
             echo "- Checkout action: actions/checkout@v5 (Node 24)"
           } >> "$GITHUB_STEP_SUMMARY"
+
+
+      - name: Attest Build Provenance
+        uses: actions/attest-build-provenance@v4.2.2
