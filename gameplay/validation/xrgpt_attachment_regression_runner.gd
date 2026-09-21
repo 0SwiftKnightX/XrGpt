@@ -15,12 +15,15 @@ func _ready() -> void:
 	add_child(main)
 	await get_tree().process_frame
 
-	var errors: Array[String] = XRGptAttachmentRegressionAudit.run(main)
-	if errors.is_empty():
-		print("ATTACHMENT_REGRESSION_PASS")
-	else:
-		for error in errors:
-			push_error("ATTACHMENT_REGRESSION_FAIL: %s" % error)
+	var all_passed := true
+	for pass_index in range(3):
+		var errors: Array[String] = XRGptAttachmentRegressionAudit.run(main)
+		if errors.is_empty():
+			print("ATTACHMENT_REGRESSION_PASS_%d" % (pass_index + 1))
+		else:
+			all_passed = false
+			for error in errors:
+				push_error("ATTACHMENT_REGRESSION_FAIL_PASS_%d: %s" % [pass_index + 1, error])
 
 	main.queue_free()
-	get_tree().quit(0 if errors.is_empty() else 1)
+	get_tree().quit(0 if all_passed else 1)
