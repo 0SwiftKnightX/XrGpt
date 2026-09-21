@@ -30,7 +30,7 @@ jobs:
         run: /tmp/godot/Godot_v4.7-stable_linux.x86_64 --headless --path . --editor --quit
 
       - name: Run XR connection audit
-        run: /tmp/godot/Godot_v4.7-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_connection_audit_runner.tscn
+        run: timeout 90s /tmp/godot/Godot_v4.7-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_connection_audit_runner.tscn
 
       - name: Run Phase 1 attachment regression three times
-        run: /tmp/godot/Godot_v4.7-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_attachment_regression_runner.tscn
+        run: timeout 90s /tmp/godot/Godot_v4.7-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_attachment_regression_runner.tscn
