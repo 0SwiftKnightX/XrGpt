@@ -89,16 +89,26 @@ jobs:
             echo "- Build provenance: attestation required on successful validation"
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Package validation evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f /tmp/godot-import.log
+          test -f /tmp/xr-connection-audit.log
+          test -f /tmp/attachment-regression.log
+          tar -czf /tmp/xr-validation-evidence.tar.gz \
+            /tmp/godot-import.log \
+            /tmp/xr-connection-audit.log \
+            /tmp/attachment-regression.log
+          test -s /tmp/xr-validation-evidence.tar.gz
+
       - name: Upload validation evidence
-        id: upload_validation_evidence
         if: always()
         uses: actions/upload-artifact@v6
         with:
           name: xr-validation-evidence-${{ github.run_id }}
-          path: |
-            /tmp/godot-import.log
-            /tmp/xr-connection-audit.log
-            /tmp/attachment-regression.log
+          path: /tmp/xr-validation-evidence.tar.gz
           if-no-files-found: error
           retention-days: 14
 
@@ -106,5 +116,4 @@ jobs:
         if: success()
         uses: actions/attest-build-provenance@v4.2.2
         with:
-          subject-digest: ${{ steps.upload_validation_evidence.outputs.artifact-digest }}
-          subject-name: xr-validation-evidence-${{ github.run_id }}
+          subject-path: /tmp/xr-validation-evidence.tar.gz
