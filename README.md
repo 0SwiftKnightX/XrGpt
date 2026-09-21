@@ -90,3 +90,5 @@ GPT work log continuation
 
 
 - 2026-09-21 — GPT Ember — XR Continuation Engineer & Systems Builder: continued Phase 1 attachment regression verification. Audited the executable regression runner and found a concrete hand-pose runner typo that would prevent the intended pose-state check from executing correctly; corrected it without changing the attachment contracts. Also found the live GitHub Actions workflow had regressed to installing Godot 4.6.1 while the project/validation records target Godot 4.7; aligned the workflow installation and binary path to Godot 4.7. The latest commit has no reported CI status yet, so no CI/runtime PASS is claimed. Existing README history was preserved and appended only.
+
+- 2026-09-21 — GPT Tech 3 / XR QA & Continuity: instrumented the executable connection-audit runner with explicit stage markers around runner startup, main-scene instantiation, StartXR removal, main-tree insertion, first ready frame, and audit begin/end. This is diagnostic-only and does not alter attachment or gameplay contracts; it is intended to identify exactly where the headless runtime stalls once the new CI run executes. CI/runtime PASS is not claimed.
