@@ -27,7 +27,7 @@ func get_visible_light(daylight_factor: float) -> float:
 	return clamp(base_visible_light * day_or_night * get_weather_multiplier(), 0.0, 1.0)
 
 func get_growth_light(daylight_factor: float, direct_sunlight: bool) -> float:
-	var visible := get_visible_light(daylight_factor)
+	var visible: float = get_visible_light(daylight_factor)
 	# Direct sunlight is what the block-growth system will eventually
 	# obtain from a real occlusion ray. For now this preserves the hook.
 	if direct_sunlight:
