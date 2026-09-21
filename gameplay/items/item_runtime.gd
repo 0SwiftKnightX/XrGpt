@@ -7,7 +7,7 @@ extends RefCounted
 static func spawn_instance(instance: XRGptItemInstance, parent: Node3D = null) -> Node3D:
 	if instance == null or instance.definition_id.is_empty():
 		return null
-	var definition := XRGptItemCatalog.find_definition(instance.definition_id)
+	var definition: XRGptItemDefinition = XRGptItemCatalog.find_definition(instance.definition_id)
 	if definition == null:
 		return null
 	var world_item := XRGptItemProceduralFactory.create_world_item(definition, instance.owner_id, instance)
