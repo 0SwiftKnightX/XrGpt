@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://gameplay/inventory/equipment_slot.gd" id="2"]
 
 [sub_resource type="BoxShape3D" id="SlotShape"]
-size = Vector3(0.34, 0.08, 0.34)
+size = Vector3(0.34, 0.08, 0.08)
 
 [sub_resource type="StandardMaterial3D" id="BoardMat"]
 albedo_color = Color(0.04, 0.045, 0.055, 0.96)
@@ -12,13 +12,13 @@ metallic = 0.2
 roughness = 0.7
 
 [sub_resource type="BoxMesh" id="BoardMesh"]
-size = Vector3(3.15, 0.045, 0.52)
+size = Vector3(3.15, 0.52, 0.045)
 
 [sub_resource type="StandardMaterial3D" id="SlotMat"]
 albedo_color = Color(0.14, 0.16, 0.19, 1)
 
 [sub_resource type="BoxMesh" id="SlotMesh"]
-size = Vector3(0.34, 0.055, 0.34)
+size = Vector3(0.34, 0.34, 0.055)
 
 [node name="ActiveEquipmentController" type="Node3D"]
 script = ExtResource("1")
@@ -34,14 +34,14 @@ text = "ACTIVE EQUIPMENT"
 font_size = 24
 outline_size = 6
 pixel_size = 0.0025
-position = Vector3(0, 0.08, -0.25)
+position = Vector3(0, 0.25, -0.03)
 
 [node name="Slot01" type="Node3D" parent="ActiveEquipmentBoard"]
 script = ExtResource("2")
 slot_id = "01"
 accepts_category = "Equipment"
 inventory_slot = false
-position = Vector3(-1.26, 0.035, 0)
+position = Vector3(-1.26, 0, 0.04)
 [node name="Interaction" type="Area3D" parent="ActiveEquipmentBoard/Slot01"]
 collision_layer = 4
 collision_mask = 0
@@ -51,7 +51,7 @@ shape = SubResource("SlotShape")
 [node name="ItemLabel" type="Label3D" parent="ActiveEquipmentBoard/Slot01"]
 font_size = 10
 pixel_size = 0.0018
-position = Vector3(0, 0.08, 0)
+position = Vector3(0, 0.08, 0.04)
 
 [node name="Visual" type="MeshInstance3D" parent="ActiveEquipmentBoard/Slot01"]
 mesh = SubResource("SlotMesh")
@@ -62,7 +62,7 @@ script = ExtResource("2")
 slot_id = "02"
 accepts_category = "Equipment"
 inventory_slot = false
-position = Vector3(-0.90, 0.035, 0)
+position = Vector3(-0.90, 0, 0.04)
 [node name="Interaction" type="Area3D" parent="ActiveEquipmentBoard/Slot02"]
 collision_layer = 4
 collision_mask = 0
@@ -83,7 +83,7 @@ script = ExtResource("2")
 slot_id = "03"
 accepts_category = "Equipment"
 inventory_slot = false
-position = Vector3(-0.54, 0.035, 0)
+position = Vector3(-0.54, 0, 0.04)
 [node name="Interaction" type="Area3D" parent="ActiveEquipmentBoard/Slot03"]
 collision_layer = 4
 collision_mask = 0
@@ -104,7 +104,7 @@ script = ExtResource("2")
 slot_id = "04"
 accepts_category = "Equipment"
 inventory_slot = false
-position = Vector3(-0.18, 0.035, 0)
+position = Vector3(-0.18, 0, 0.04)
 [node name="Interaction" type="Area3D" parent="ActiveEquipmentBoard/Slot04"]
 collision_layer = 4
 collision_mask = 0
@@ -125,7 +125,7 @@ script = ExtResource("2")
 slot_id = "05"
 accepts_category = "Equipment"
 inventory_slot = false
-position = Vector3(0.18, 0.035, 0)
+position = Vector3(0.18, 0, 0.04)
 [node name="Interaction" type="Area3D" parent="ActiveEquipmentBoard/Slot05"]
 collision_layer = 4
 collision_mask = 0
@@ -146,7 +146,7 @@ script = ExtResource("2")
 slot_id = "06"
 accepts_category = "Equipment"
 inventory_slot = false
-position = Vector3(0.54, 0.035, 0)
+position = Vector3(0.54, 0, 0.04)
 [node name="Interaction" type="Area3D" parent="ActiveEquipmentBoard/Slot06"]
 collision_layer = 4
 collision_mask = 0
@@ -167,7 +167,7 @@ script = ExtResource("2")
 slot_id = "07"
 accepts_category = "Equipment"
 inventory_slot = false
-position = Vector3(0.90, 0.035, 0)
+position = Vector3(0.90, 0, 0.04)
 [node name="Interaction" type="Area3D" parent="ActiveEquipmentBoard/Slot07"]
 collision_layer = 4
 collision_mask = 0
@@ -188,7 +188,7 @@ script = ExtResource("2")
 slot_id = "08"
 accepts_category = "Equipment"
 inventory_slot = false
-position = Vector3(1.26, 0.035, 0)
+position = Vector3(1.26, 0, 0.04)
 [node name="Interaction" type="Area3D" parent="ActiveEquipmentBoard/Slot08"]
 collision_layer = 4
 collision_mask = 0
