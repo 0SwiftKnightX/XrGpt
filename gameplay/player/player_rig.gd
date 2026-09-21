@@ -15,6 +15,7 @@ extends Node3D
 var skeleton: Skeleton3D
 var _left_controller: XRController3D
 var _right_controller: XRController3D
+var _pose_amounts: Dictionary = {} 
 var _bone_indices: Dictionary = {}
 var _hitboxes: Dictionary = {}
 var _finger_points: Dictionary = {}
@@ -188,6 +189,7 @@ func _update_hand_pose(controller: XRController3D, is_right: bool) -> void:
 	_set_hand_clench("r" if is_right else "l", grip)
 
 func _set_hand_clench(side_name: String, amount: float) -> void:
+	_pose_amounts[side_name] = amount
 	var bones := ["thumb1", "thumb2", "thumb3", "index1", "index2", "index3", "middle1", "middle2", "middle3", "ring1", "ring2", "ring3", "little1", "little2", "little3"]
 	for bone_base in bones:
 		var bone_name := "%s_%s" % [bone_base, side_name]
