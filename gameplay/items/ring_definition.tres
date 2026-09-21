@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="XRGptItemDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://gameplay/items/item_definition.gd" id="1_def"]
+[ext_resource type="Resource" path="res://gameplay/items/ring_attachment_profile.tres" id="2_profile"]
+
+[resource]
+script = ExtResource("1_def")
+item_id = "equipment.test_ring"
+display_name = "Test Ring"
+category = "Equipment"
+rarity = "Common"
+description = "Attachment prototype for the right ring finger."
+max_stack = 1
+auto_collect = false
+first_claim_relinquishable = true
+mailbox_on_full = true
+tradeable = true
+stealable = true
+attachment_profile = ExtResource("2_profile")
