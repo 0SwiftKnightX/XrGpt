@@ -12,6 +12,10 @@ func _ready() -> void:
 	await get_tree().process_frame
 
 	var errors := XRGptConnectionAudit.run(main)
+	for pass_index in range(3):
+		var regression_errors := XRGptAttachmentRegressionAudit.run(main)
+		for error in regression_errors:
+			errors.append("ATTACHMENT_REGRESSION_PASS_%d: %s" % [pass_index + 1, error])
 	if errors.is_empty():
 		print("XRGPT_CONNECTION_AUDIT: PASS")
 		main.queue_free()
