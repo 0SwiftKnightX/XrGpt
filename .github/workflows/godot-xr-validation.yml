@@ -11,6 +11,13 @@ on:
 
 permissions:
   contents: read
+  id-token: write
+  attestations: write
+  artifact-metadata: write
+
+concurrency:
+  group: godot-xr-validation-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
@@ -59,7 +66,9 @@ jobs:
         run: |
           set -euo pipefail
           /usr/bin/timeout 90s /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_attachment_regression_runner.tscn 2>&1 | tee /tmp/attachment-regression.log
-          grep -Fq 'ATTACHMENT_REGRESSION_PASS' /tmp/attachment-regression.log
+          grep -Fq 'ATTACHMENT_REGRESSION_PASS_1' /tmp/attachment-regression.log
+          grep -Fq 'ATTACHMENT_REGRESSION_PASS_2' /tmp/attachment-regression.log
+          grep -Fq 'ATTACHMENT_REGRESSION_PASS_3' /tmp/attachment-regression.log
           if grep -Eiq 'SCRIPT ERROR|Parse Error|Parser Error|Invalid call|GDScript\.new|ATTACHMENT_REGRESSION_FAIL|ERROR: ATTACHMENT_' /tmp/attachment-regression.log; then
             echo "::error::Phase 1 attachment regression reported an execution or regression failure."
             exit 1
@@ -74,7 +83,24 @@ jobs:
             echo ""
             echo "- Godot: 4.6.1"
             echo "- XR connection audit: required `audit_begin` + `audit_end` + PASS"
-            echo "- Phase 1 attachment regression: required PASS"
+            echo "- Phase 1 attachment regression: required PASS_1 + PASS_2 + PASS_3"
             echo "- Checkout action: actions/checkout@v5 (Node 24)"
+            echo "- Validation evidence: uploaded as a workflow artifact"
+            echo "- Build provenance: attestation required on successful validation"
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xr-validation-evidence-${{ github.run_id }}
+          path: |
+            /tmp/godot-import.log
+            /tmp/xr-connection-audit.log
+            /tmp/attachment-regression.log
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Attest Build Provenance
+        if: success()
+        uses: actions/attest-build-provenance@v4.2.2
