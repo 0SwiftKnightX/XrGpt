@@ -31,9 +31,9 @@ func _process(delta: float) -> void:
 	_update_lights()
 
 func _update_lights() -> void:
-	var sun_angle := (time_of_day / 24.0) * TAU - PI * 0.5
-	var daylight := clamp(sin(sun_angle), 0.0, 1.0)
-	var moonlight := clamp(-sin(sun_angle), 0.0, 1.0)
+	var sun_angle: float = (time_of_day / 24.0) * TAU - PI * 0.5
+	var daylight: float = clamp(sin(sun_angle), 0.0, 1.0)
+	var moonlight: float = clamp(-sin(sun_angle), 0.0, 1.0)
 
 	sun.rotation_degrees = Vector3(rad_to_deg(sun_angle), 0.0, 0.0)
 	moon.rotation_degrees = Vector3(rad_to_deg(sun_angle + PI), 0.0, 0.0)
@@ -49,6 +49,6 @@ func _update_lights() -> void:
 
 	# Rotate the procedural sky colors with the celestial cycle.
 	if sky and sky.sky_material is ProceduralSkyMaterial:
-		var material := sky.sky_material as ProceduralSkyMaterial
+		var material: ProceduralSkyMaterial = sky.sky_material as ProceduralSkyMaterial
 		material.sky_top_color = Color(0.025, 0.035, 0.065, 1).lerp(Color(0.18, 0.38, 0.75, 1), daylight)
 		material.sky_horizon_color = Color(0.12, 0.15, 0.2, 1).lerp(Color(0.55, 0.72, 1.0, 1), daylight)
