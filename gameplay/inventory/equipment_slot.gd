@@ -4,8 +4,8 @@ extends XRGptItemSlot
 @export var accepted_category: String = ""
 
 func can_accept(candidate: XRGptItemInstance) -> bool:
-	if candidate == null:
+	if candidate == null or item != null:
 		return false
 	if accepted_category.is_empty():
 		return true
-	return candidate.definition_id.begins_with(accepted_category)
+	return candidate.category == accepted_category
