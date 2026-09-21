@@ -155,9 +155,9 @@ static func _create_ring(definition: XRGptItemDefinition, instance: XRGptItemIns
 
 	var shape := CollisionShape3D.new()
 	shape.name = "CollisionShape3D"
-	var collision := TorusShape3D.new()
-	collision.inner_radius = 0.009
-	collision.outer_radius = 0.013
+	var collision := CylinderShape3D.new()
+	collision.radius = 0.013
+	collision.height = 0.006
 	shape.shape = collision
 	body.add_child(shape)
 	return body
