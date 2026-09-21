@@ -130,6 +130,30 @@ func _grab_from_slot(slot: XRGptItemSlot) -> void:
 		_held_item = null
 		_origin_slot = null
 		interaction_failed.emit("slot_grab", "missing_container")
+		return
+	_create_held_visual()
+
+func _create_held_visual() -> void:
+	if _held_item == null or _active_controller == null:
+		return
+	_clear_held_visual()
+	var visual: Node3D = XRGptItemRuntime.spawn_instance(_held_item, _active_controller)
+	if visual == null:
+		return
+	_held_visual = visual
+	var body: RigidBody3D = visual as RigidBody3D
+	if body != null:
+		body.freeze = true
+		body.freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
+		body.collision_layer = 0
+		body.collision_mask = 0
+	visual.position = Vector3(0.0, -0.02, -0.12)
+	visual.rotation = Vector3.ZERO
+
+func _clear_held_visual() -> void:
+	if _held_visual != null and is_instance_valid(_held_visual):
+		_held_visual.queue_free()
+	_held_visual = null
 
 func _release_held_item() -> void:
 	var hit := _raycast()
