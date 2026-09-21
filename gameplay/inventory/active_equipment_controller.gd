@@ -4,15 +4,18 @@ extends Node3D
 @export var camera_path: NodePath
 @export var distance := 0.95
 @export var vertical_offset := -0.48
+@export var attachment_controller_path: NodePath
 
 var is_open := true
 var _board: Node3D
 var _camera: XRCamera3D
 var _slots: Array[XRGptItemSlot] = []
+var _attachment_controller: XRGptAttachmentController
 
 func _ready() -> void:
 	_board = get_node_or_null("ActiveEquipmentBoard")
 	_camera = get_node_or_null(camera_path) as XRCamera3D
+	_attachment_controller = get_node_or_null(attachment_controller_path) as XRGptAttachmentController
 	_cache_slots()
 	if _board:
 		_board.visible = is_open
@@ -44,6 +47,8 @@ func toggle() -> void:
 func place_item(instance: XRGptItemInstance) -> bool:
 	for slot in _slots:
 		if slot.set_item(instance):
+			if _attachment_controller != null:
+				_attachment_controller.attach_slot(slot)
 			return true
 	return false
 
@@ -55,11 +60,16 @@ func place_item_in_slot(instance: XRGptItemInstance, slot: XRGptItemSlot) -> boo
 	for existing in _slots:
 		if existing.item == instance:
 			return false
-	return slot.set_item(instance)
+	var accepted: bool = slot.set_item(instance)
+	if accepted and _attachment_controller != null:
+		_attachment_controller.attach_slot(slot)
+	return accepted
 
 func remove_item(instance: XRGptItemInstance) -> bool:
 	for slot in _slots:
 		if slot.item == instance:
+			if _attachment_controller != null:
+				_attachment_controller.detach_slot(slot)
 			slot.clear_item()
 			return true
 	return false
