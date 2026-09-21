@@ -25,7 +25,6 @@ func attach_slot(slot: XRGptItemSlot) -> bool:
 	if not attachment.can_attach(slot.item):
 		attachment.current_slot_id = ""
 		return false
-		return false
 	detach_slot(slot)
 	var visual: Node3D = XRGptItemRuntime.spawn_instance(slot.item, attachment)
 	if visual == null:
