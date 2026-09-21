@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://dqilakjuye5cy"]
+[gd_scene load_steps=2 format=3 uid="uid://dqilakjuye5cy"]
 
 [ext_resource type="PackedScene" uid="uid://bq86r4yll8po" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/left_fullglove_low.tscn" id="1_left_hand"]
 [ext_resource type="PackedScene" uid="uid://d1tl07geqm5xq" path="res://addons/godot-xr-tools/hands/scenes/highpoly/right_fullglove_hand.tscn" id="2_right_hand"]
 [ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="3_pickup"]
 [ext_resource type="Script" path="res://gameplay/interaction/xr_ray_pointer.gd" id="4_ray"]
 [ext_resource type="PackedScene" uid="uid://btknduttnmoxf" path="res://addons/godot-xr-tools/misc/vr_common_shader_cache.tscn" id="5_shader_cache"]
+[ext_resource type="PackedScene" path="res://gameplay/player/player_rig.tscn" id="6_rig"]
 
 [sub_resource type="CylinderMesh" id="RayMesh"]
 top_radius = 0.006
@@ -36,6 +37,8 @@ transparency = 1
 
 [node name="VRCommonShaderCache" parent="XRCamera3D" instance=ExtResource("5_shader_cache")]
 
+[node name="PlayerRig" parent="." instance=ExtResource("6_rig")]
+
 [node name="LeftController" type="XRController3D" parent="."]
 tracker = &"left_hand"
 pose = &"default"
@@ -64,6 +67,7 @@ material_override = SubResource("RayMat")
 visible = false
 mesh = SubResource("ReticleMesh")
 material_override = SubResource("ReticleMat")
+
 [node name="RayPointer" type="Node3D" parent="LeftController"]
 script = ExtResource("4_ray")
 
@@ -76,4 +80,3 @@ material_override = SubResource("RayMat")
 visible = false
 mesh = SubResource("ReticleMesh")
 material_override = SubResource("ReticleMat")
-
