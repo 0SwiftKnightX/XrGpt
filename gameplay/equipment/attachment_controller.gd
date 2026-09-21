@@ -9,6 +9,10 @@ extends Node3D
 var _attachment_points: Array[XRGptAttachmentPoint] = []
 var _attached_visuals: Dictionary = {}
 
+signal attachment_succeeded(slot_id: String, attachment_id: String)
+signal attachment_failed(slot_id: String, reason: String)
+signal attachment_detached(slot_id: String, attachment_id: String)
+
 func _ready() -> void:
 	_refresh_attachment_points()
 
@@ -27,21 +31,26 @@ func _collect_attachment_points(node: Node) -> void:
 
 func attach_slot(slot: XRGptItemSlot) -> bool:
 	if slot == null or slot.item == null:
+		attachment_failed("" if slot == null else slot.slot_id, "EMPTY_SLOT")
 		return false
 	_refresh_attachment_points()
 	var attachment: XRGptAttachmentPoint = _find_attachment_for_slot(slot)
 	if attachment == null:
+		attachment_failed(slot.slot_id, "NO_COMPATIBLE_ATTACHMENT")
 		return false
 	if attachment.exclusive and not attachment.current_slot_id.is_empty() and attachment.current_slot_id != slot.slot_id:
+		attachment_failed(slot.slot_id, "ATTACHMENT_OCCUPIED")
 		return false
 	detach_slot(slot)
 	attachment.current_slot_id = slot.slot_id
 	if not attachment.can_attach(slot.item):
 		attachment.current_slot_id = ""
+		attachment_failed(slot.slot_id, "COMPATIBILITY_REJECTED")
 		return false
 	var visual: Node3D = XRGptItemRuntime.spawn_instance(slot.item, attachment)
 	if visual == null:
 		attachment.current_slot_id = ""
+		attachment_failed(slot.slot_id, "RUNTIME_VISUAL_FAILED")
 		return false
 	var body: RigidBody3D = visual as RigidBody3D
 	if body != null and attachment.hide_physics_while_attached:
@@ -55,20 +64,25 @@ func attach_slot(slot: XRGptItemSlot) -> bool:
 	slot.item.attachment_type = attachment.attachment_type
 	slot.item.attachment_side = attachment.side
 	attachment.set_attachment_state(slot.slot_id, true)
+	attachment_succeeded.emit(slot.slot_id, attachment.attachment_id)
 	return true
 
 func detach_slot(slot: XRGptItemSlot) -> void:
 	if slot == null:
 		return
+	var detached_attachment_id := ""
 	var visual: Node3D = _attached_visuals.get(slot.slot_id) as Node3D
 	if visual != null and is_instance_valid(visual):
 		visual.queue_free()
 	var attachment: XRGptAttachmentPoint = _find_attachment_for_slot(slot)
 	if attachment != null:
+		detached_attachment_id = attachment.attachment_id
 		attachment.set_attachment_state(slot.slot_id, false)
 	if slot.item != null:
 		slot.item.clear_attachment_state()
 	_attached_visuals.erase(slot.slot_id)
+	if not detached_attachment_id.is_empty():
+		attachment_detached.emit(slot.slot_id, detached_attachment_id)
 
 func get_attachment_points() -> Array[XRGptAttachmentPoint]:
 	_refresh_attachment_points()
