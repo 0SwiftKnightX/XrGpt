@@ -23,7 +23,7 @@ func get_weather_multiplier() -> float:
 			return 1.0
 
 func get_visible_light(daylight_factor: float) -> float:
-	var day_or_night := lerp(NIGHT_VISIBLE_MULTIPLIER, 1.0, clamp(daylight_factor, 0.0, 1.0))
+	var day_or_night: float = lerp(NIGHT_VISIBLE_MULTIPLIER, 1.0, clamp(daylight_factor, 0.0, 1.0))
 	return clamp(base_visible_light * day_or_night * get_weather_multiplier(), 0.0, 1.0)
 
 func get_growth_light(daylight_factor: float, direct_sunlight: bool) -> float:
