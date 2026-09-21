@@ -157,13 +157,22 @@ func _add_bone_hitbox(parent: Node3D, bone_name: String) -> void:
 	area.add_child(shape_node)
 
 func _add_finger_attachment_point(parent: Node3D, bone_name: String) -> void:
-	if not bone_name.begins_with("ring1_"):
+	if not bone_name.ends_with("_l") and not bone_name.ends_with("_r"):
 		return
+	var finger_name := ""
+	for candidate in ["thumb", "index", "middle", "ring", "little"]:
+		if bone_name.begins_with(candidate + "1_"):
+			finger_name = candidate
+			break
+	if finger_name.is_empty():
+		return
+	var is_left := bone_name.ends_with("_l")
+	var side_name := "left" if is_left else "right"
 	var point := XRGptAttachmentPoint.new()
-	point.name = "RingAttachmentPoint"
+	point.name = "%sAttachmentPoint" % finger_name.capitalize()
 	point.attachment_type = "Finger"
-	point.side = "Left" if bone_name.ends_with("_l") else "Right"
-	point.attachment_id = "finger.%s.ring" % ("left" if point.side == "Left" else "right")
+	point.side = "Left" if is_left else "Right"
+	point.attachment_id = "finger.%s.%s" % [side_name, finger_name]
 	point.position_offset = Vector3(0, 0, -0.014)
 	point.accepts_categories = ["Equipment"]
 	parent.add_child(point)
