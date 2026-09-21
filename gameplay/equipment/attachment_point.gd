@@ -36,9 +36,14 @@ var side: String = "Any"
 @export var current_slot_id: String = ""
 
 func can_attach(instance: XRGptItemInstance) -> bool:
+	return can_attach_for_slot(instance, current_slot_id)
+
+func can_attach_for_slot(instance: XRGptItemInstance, candidate_slot_id: String) -> bool:
 	if not enabled or instance == null:
 		return false
-	if not slot_ids.is_empty() and not slot_ids.has(current_slot_id):
+	if not slot_ids.is_empty() and not slot_ids.has(candidate_slot_id):
+		return false
+	if exclusive and not current_slot_id.is_empty() and current_slot_id != candidate_slot_id:
 		return false
 	if not accepts_categories.is_empty() and not accepts_categories.has(instance.category):
 		return false
