@@ -100,8 +100,11 @@ func _find_attachment_for_slot(slot: XRGptItemSlot) -> XRGptAttachmentPoint:
 			continue
 		if not point.slot_ids.is_empty() and not point.slot_ids.has(slot.slot_id):
 			continue
+		if point.exclusive and not point.current_slot_id.is_empty() and point.current_slot_id != slot.slot_id:
+			continue
+		var previous_slot_id := point.current_slot_id
 		point.current_slot_id = slot.slot_id
 		if point.can_attach(slot.item):
 			return point
-		point.current_slot_id = ""
+		point.current_slot_id = previous_slot_id
 	return null
