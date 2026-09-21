@@ -8,6 +8,7 @@ extends Node3D
 
 var _attachment_points: Array[XRGptAttachmentPoint] = []
 var _attached_visuals: Dictionary = {}
+var _slot_attachments: Dictionary = {}
 
 signal attachment_succeeded(slot_id: String, attachment_id: String)
 signal attachment_failed(slot_id: String, reason: String)
@@ -60,6 +61,7 @@ func attach_slot(slot: XRGptItemSlot) -> bool:
 		body.collision_mask = 0
 	visual.transform = attachment.get_attachment_transform(slot.item)
 	_attached_visuals[slot.slot_id] = visual
+	_slot_attachments[slot.slot_id] = attachment
 	slot.item.attachment_id = attachment.attachment_id
 	slot.item.attachment_type = attachment.attachment_type
 	slot.item.attachment_side = attachment.side
@@ -71,16 +73,18 @@ func detach_slot(slot: XRGptItemSlot) -> void:
 	if slot == null:
 		return
 	var detached_attachment_id := ""
+	var known_attachment: XRGptAttachmentPoint = _slot_attachments.get(slot.slot_id) as XRGptAttachmentPoint
 	var visual: Node3D = _attached_visuals.get(slot.slot_id) as Node3D
 	if visual != null and is_instance_valid(visual):
 		visual.queue_free()
-	var attachment: XRGptAttachmentPoint = _find_attachment_for_slot(slot)
+	var attachment: XRGptAttachmentPoint = known_attachment
 	if attachment != null:
 		detached_attachment_id = attachment.attachment_id
 		attachment.set_attachment_state(slot.slot_id, false)
 	if slot.item != null:
 		slot.item.clear_attachment_state()
 	_attached_visuals.erase(slot.slot_id)
+	_slot_attachments.erase(slot.slot_id)
 	if not detached_attachment_id.is_empty():
 		attachment_detached.emit(slot.slot_id, detached_attachment_id)
 
