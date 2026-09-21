@@ -7,7 +7,7 @@ albedo_color = Color(0.025, 0.03, 0.04, 0.72)
 roughness = 0.8
 
 [sub_resource type="BoxMesh" id="BoardMesh"]
-size = Vector3(1.75, 0.035, 0.42)
+size = Vector3(1.75, 0.42, 0.035)
 
 [node name="HUDBoard" type="Node3D"]
 script = ExtResource("1")
@@ -21,32 +21,32 @@ text = "HEALTH  100 / 100"
 font_size = 22
 outline_size = 5
 pixel_size = 0.002
-position = Vector3(-0.62, 0.05, -0.20)
+position = Vector3(-0.62, 0.11, 0.02)
 
 [node name="Experience" type="Label3D" parent="."]
 text = "XP  0"
 font_size = 22
 outline_size = 5
 pixel_size = 0.002
-position = Vector3(-0.62, 0.05, -0.04)
+position = Vector3(-0.62, -0.01, 0.02)
 
 [node name="Compass" type="Label3D" parent="."]
 text = "N  NE  E  SE  S  SW  W  NW"
 font_size = 18
 outline_size = 4
 pixel_size = 0.0018
-position = Vector3(0.15, 0.05, -0.20)
+position = Vector3(0.15, 0.11, 0.02)
 
 [node name="Coordinates" type="Label3D" parent="."]
 text = "X 0   Y 0   Z 0"
 font_size = 16
 outline_size = 4
 pixel_size = 0.0018
-position = Vector3(0.15, 0.05, -0.08)
+position = Vector3(0.15, 0.02, 0.02)
 
 [node name="DepthHeight" type="Label3D" parent="."]
 text = "Height: 0 ft above surface"
 font_size = 16
 outline_size = 4
 pixel_size = 0.0018
-position = Vector3(0.15, 0.05, 0.04)
+position = Vector3(0.15, -0.07, 0.02)
