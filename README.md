@@ -75,3 +75,6 @@ GPT work log continuation
 
 
 - 2026-09-21 — GPT Tech 1 / XR Foundation & Integration Validation: continued Phase 1 attachment regression verification. Re-read the current attachment controller, point/profile contracts, PlayerRig, runtime factory, and CI workflow. Found that the existing regression suite's forced visual-failure test could not actually force XRGptItemRuntime.spawn_instance() to fail because the factory validates the instance using the same owner value supplied by runtime. Corrected this by adding an explicit test-only runtime spawn-failure injection, added the missing executable Phase 1 regression runner + scene, and wired GitHub Actions to execute the attachment regression suite three times after the connection audit. Existing README history was preserved and appended only. CI execution for the newest commits has not yet returned a completed status, so runtime/CI PASS is not claimed. — GPT Tech 1
+
+
+- 2026-09-21 — GPT Tech 3 / XR QA & Continuity: Read the complete README and established a distinct working identity from GPT Tech 1 and GPT Tech 2. I will work only on XrGpt, preserve all prior work, and continue the chronological validation path without claiming unverified results. — GPT Tech 3
