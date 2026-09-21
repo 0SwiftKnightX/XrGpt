@@ -32,19 +32,19 @@ func _collect_attachment_points(node: Node) -> void:
 
 func attach_slot(slot: XRGptItemSlot) -> bool:
 	if slot == null or slot.item == null:
-		attachment_failed("" if slot == null else slot.slot_id, "EMPTY_SLOT")
+		attachment_failed.emit("" if slot == null else slot.slot_id, "EMPTY_SLOT")
 		return false
 	_refresh_attachment_points()
 	var attachment: XRGptAttachmentPoint = _find_attachment_for_slot(slot)
 	if attachment == null:
 		var reason := "ATTACHMENT_OCCUPIED" if _has_occupied_compatible_attachment(slot) else "NO_COMPATIBLE_ATTACHMENT"
-		attachment_failed(slot.slot_id, reason)
+		attachment_failed.emit(slot.slot_id, reason)
 		return false
 	var previous_attachment: XRGptAttachmentPoint = _slot_attachments.get(slot.slot_id) as XRGptAttachmentPoint
 	var previous_visual: Node3D = _attached_visuals.get(slot.slot_id) as Node3D
 	var visual: Node3D = XRGptItemRuntime.spawn_instance(slot.item, attachment)
 	if visual == null:
-		attachment_failed(slot.slot_id, "RUNTIME_VISUAL_FAILED")
+		attachment_failed.emit(slot.slot_id, "RUNTIME_VISUAL_FAILED")
 		return false
 	if previous_attachment != null and previous_attachment != attachment:
 		previous_attachment.set_attachment_state(slot.slot_id, false)
