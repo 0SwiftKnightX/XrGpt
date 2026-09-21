@@ -163,12 +163,12 @@ static func _check_controller_transactions(errors: Array[String]) -> void:
 	var detached_signals: Array[String] = []
 	controller.attachment_detached.connect(func(slot_id: String, attachment_id: String): detached_signals.append(slot_id + ":" + attachment_id))
 	controller.attachment_failed.connect(func(slot_id: String, reason: String): failures.append(slot_id + ":" + reason))
-	var successes := 0
-	controller.attachment_succeeded.connect(func(_slot_id: String, _attachment_id: String): successes += 1)
+	var successes: Array[String] = []
+	controller.attachment_succeeded.connect(func(slot_id: String, attachment_id: String): successes.append(slot_id + ":" + attachment_id)
 
 	if not controller.attach_slot(slot_a):
 		errors.append("INITIAL_ATTACHMENT_FAILED")
-	elif successes != 1:
+	elif successes.size() != 1 or successes[0] != "A:finger.right.ring":
 		errors.append("ATTACHMENT_SUCCESS_SIGNAL_MISSING")
 	if controller.attach_slot(slot_b):
 		errors.append("EXCLUSIVE_OCCUPANCY_ACCEPTED")
@@ -199,7 +199,7 @@ static func _check_controller_transactions(errors: Array[String]) -> void:
 		errors.append("DETACHMENT_POINT_CLEANUP_FAILED")
 	if not item_a.attachment_id.is_empty():
 		errors.append("DETACHMENT_ITEM_CLEANUP_FAILED")
-	if not failures.is_empty() and successes < 1:
+	if failures.is_empty() or successes.is_empty():
 		errors.append("LIFECYCLE_SIGNAL_STATE_INVALID")
 
 	harness.free()
