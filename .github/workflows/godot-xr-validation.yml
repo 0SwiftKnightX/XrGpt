@@ -2,13 +2,12 @@ name: Godot XR Validation
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
-
-permissions:
-  contents: read
 
 jobs:
   validate:
@@ -18,21 +17,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Godot 4.7
-        shell: bash
         run: |
-          set -euo pipefail
-          GODOT_VERSION="4.7-stable"
-          curl -L --fail --retry 3 \
-            -o /tmp/godot.zip \
-            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          set -e
+          curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+          mkdir -p /tmp/godot
           unzip -q /tmp/godot.zip -d /tmp/godot
-          GODOT_BIN="$(find /tmp/godot -maxdepth 2 -type f -name 'Godot' -perm -111 | head -n 1)"
-          test -n "${GODOT_BIN}"
-          "${GODOT_BIN}" --version
-          echo "GODOT_BIN=${GODOT_BIN}" >> "${GITHUB_ENV}"
+          GODOT_BIN="$(find /tmp/godot -type f -name Godot -perm -111 | head -n 1)"
+          test -n "$GODOT_BIN"
+          "$GODOT_BIN" --version
+          echo "$(dirname "$GODOT_BIN")" >> "$GITHUB_PATH"
 
       - name: Import and parse project
-        run: "${GODOT_BIN}" --headless --path . --editor --quit
+        run: godot --headless --path . --editor --quit
 
       - name: Run XR connection audit
-        run: "${GODOT_BIN}" --headless --path . --editor --quit-after 30 res://gameplay/validation/xrgpt_connection_audit_runner.tscn
+        run: godot --headless --path . res://gameplay/validation/xrgpt_connection_audit_runner.tscn
