@@ -178,8 +178,8 @@ static func _check_controller_transactions(errors: Array[String]) -> void:
 		errors.append("ITEM_ATTACHMENT_ID_NOT_PRESERVED")
 
 	# Force runtime visual creation to fail after compatibility succeeds.
-	item_a.owner_id = ""
 	var previous_visual := controller._attached_visuals.get("A") as Node3D
+	XRGptItemRuntime.test_force_spawn_failure = true
 	if controller.attach_slot(slot_a):
 		errors.append("INVALID_RUNTIME_VISUAL_ACCEPTED")
 	else:
@@ -191,6 +191,7 @@ static func _check_controller_transactions(errors: Array[String]) -> void:
 		if retained != previous_visual:
 			errors.append("HELD_VISUAL_NOT_PRESERVED_ON_FAILURE")
 
+	XRGptItemRuntime.test_force_spawn_failure = false
 	controller.detach_slot(slot_a)
 	if point.current_slot_id != "":
 		errors.append("DETACHMENT_POINT_CLEANUP_FAILED")
