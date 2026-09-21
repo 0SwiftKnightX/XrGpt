@@ -16,6 +16,8 @@ var skeleton: Skeleton3D
 var _left_controller: XRController3D
 var _right_controller: XRController3D
 var _bone_indices: Dictionary = {}
+var _hitboxes: Dictionary = {}
+var _finger_points: Dictionary = {}
 
 const BONE_LENGTHS := {
 	"pelvis": 0.09, "spine": 0.11, "chest": 0.10, "neck": 0.07, "head": 0.12,
@@ -148,6 +150,7 @@ func _add_bone_hitbox(parent: Node3D, bone_name: String) -> void:
 	area.set_meta("bone_name", bone_name)
 	area.set_meta("damage_target", self)
 	parent.add_child(area)
+	_hitboxes[bone_name] = area
 	var shape_node := CollisionShape3D.new()
 	var shape := CapsuleShape3D.new()
 	shape.height = maxf(length, 0.012)
@@ -176,6 +179,7 @@ func _add_finger_attachment_point(parent: Node3D, bone_name: String) -> void:
 	point.position_offset = Vector3(0, 0, -0.014)
 	point.accepts_categories = ["Equipment"]
 	parent.add_child(point)
+	_finger_points[point.attachment_id] = point
 
 func _update_hand_pose(controller: XRController3D, is_right: bool) -> void:
 	if controller == null:
@@ -201,3 +205,10 @@ func _idx(name: String) -> int:
 	if skeleton == null:
 		return -1
 	return int(_bone_indices.get(name, skeleton.find_bone(name)))
+
+
+func get_bone_hitbox(bone_name: String) -> Area3D:
+	return _hitboxes.get(bone_name) as Area3D
+
+func get_attachment_point(attachment_id: String) -> XRGptAttachmentPoint:
+	return _finger_points.get(attachment_id) as XRGptAttachmentPoint
