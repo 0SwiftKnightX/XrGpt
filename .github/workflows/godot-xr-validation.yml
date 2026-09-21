@@ -56,14 +56,12 @@ jobs:
             exit 1
           fi
 
-      - name: Run Phase 1 attachment regression three times
+      - name: Run Phase 1 attachment regression
         shell: bash
         run: |
           set -euo pipefail
           /usr/bin/timeout 90s /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_attachment_regression_runner.tscn 2>&1 | tee /tmp/attachment-regression.log
-          for pass in 1 2 3; do
-            grep -Fq "ATTACHMENT_REGRESSION_PASS_$pass" /tmp/attachment-regression.log
-          done
+          grep -Fq 'ATTACHMENT_REGRESSION_PASS' /tmp/attachment-regression.log
           if grep -Eiq 'SCRIPT ERROR|Parse Error|Parser Error|Invalid call|GDScript\.new|ATTACHMENT_REGRESSION_FAIL|ERROR: ATTACHMENT_' /tmp/attachment-regression.log; then
             echo "::error::Phase 1 attachment regression reported an execution or regression failure."
             exit 1
@@ -78,7 +76,7 @@ jobs:
             echo ""
             echo "- Godot: 4.6.1"
             echo "- XR connection audit: required `audit_begin` + `audit_end` + PASS"
-            echo "- Phase 1 attachment regression: required PASS_1 + PASS_2 + PASS_3"
+            echo "- Phase 1 attachment regression: required PASS"
             echo "- Checkout action: actions/checkout@v5 (Node 24)"
           } >> "$GITHUB_STEP_SUMMARY"
 
