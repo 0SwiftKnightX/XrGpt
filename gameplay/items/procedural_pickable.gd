@@ -50,7 +50,7 @@ func bind_item_instance(instance: XRGptItemInstance) -> void:
 func ensure_item_instance(default_item_id: String = "", owner_id: String = "player_1") -> XRGptItemInstance:
 	if item_instance != null:
 		return item_instance
-	var resolved_id := definition_id if not definition_id.is_empty() else default_item_id
+	var resolved_id: String = definition_id if not definition_id.is_empty() else default_item_id
 	if resolved_id.is_empty():
 		return null
 	var definition: XRGptItemDefinition = XRGptItemCatalog.find_definition(resolved_id)
