@@ -9,16 +9,21 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
       - name: Install Godot 4.6.1
+        shell: bash
         run: |
-          set -e
+          set -euo pipefail
           curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.6.1-stable/Godot_v4.6.1-stable_linux.x86_64.zip
           mkdir -p /tmp/godot
           unzip -q /tmp/godot.zip -d /tmp/godot
@@ -27,10 +32,50 @@ jobs:
           "$GODOT_BIN" --version
 
       - name: Import and parse project
-        run: /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . --editor --quit
+        shell: bash
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . --editor --quit 2>&1 | tee /tmp/godot-import.log
+          if grep -Eiq 'SCRIPT ERROR|Parse Error|Parser Error|Invalid call|GDScript\.new' /tmp/godot-import.log; then
+            echo "::error::Godot import/parse reported a script or parser error."
+            exit 1
+          fi
 
       - name: Run XR connection audit
-        run: timeout 90s /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_connection_audit_runner.tscn
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/timeout 90s /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_connection_audit_runner.tscn 2>&1 | tee /tmp/xr-connection-audit.log
+          grep -Fq 'XRGPT_CONNECTION_AUDIT_STAGE: audit_begin' /tmp/xr-connection-audit.log
+          grep -Fq 'XRGPT_CONNECTION_AUDIT_STAGE: audit_end' /tmp/xr-connection-audit.log
+          grep -Fq 'XRGPT_CONNECTION_AUDIT: PASS' /tmp/xr-connection-audit.log
+          if grep -Eiq 'SCRIPT ERROR|Parse Error|Parser Error|Invalid call|GDScript\.new|XRGPT_CONNECTION_AUDIT: FAIL' /tmp/xr-connection-audit.log; then
+            echo "::error::XR connection audit reported an execution or audit failure."
+            exit 1
+          fi
 
       - name: Run Phase 1 attachment regression three times
-        run: timeout 90s /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_attachment_regression_runner.tscn
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/timeout 90s /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_attachment_regression_runner.tscn 2>&1 | tee /tmp/attachment-regression.log
+          for pass in 1 2 3; do
+            grep -Fq "ATTACHMENT_REGRESSION_PASS_$pass" /tmp/attachment-regression.log
+          done
+          if grep -Eiq 'SCRIPT ERROR|Parse Error|Parser Error|Invalid call|GDScript\.new|ATTACHMENT_REGRESSION_FAIL|ERROR: ATTACHMENT_' /tmp/attachment-regression.log; then
+            echo "::error::Phase 1 attachment regression reported an execution or regression failure."
+            exit 1
+          fi
+
+      - name: Publish validation summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Godot XR Validation"
+            echo ""
+            echo "- Godot: 4.6.1"
+            echo "- XR connection audit: required `audit_begin` + `audit_end` + PASS"
+            echo "- Phase 1 attachment regression: required PASS_1 + PASS_2 + PASS_3"
+            echo "- Checkout action: actions/checkout@v5 (Node 24)"
+          } >> "$GITHUB_STEP_SUMMARY"
