@@ -7,19 +7,19 @@ extends Node3D
 @export var right_hand_attachment_path: NodePath
 @export var left_hand_attachment_path: NodePath
 
-var _right_hand_attachment: Node3D
-var _left_hand_attachment: Node3D
+var _right_hand_attachment: XRGptAttachmentPoint
+var _left_hand_attachment: XRGptAttachmentPoint
 var _attached_visuals: Dictionary = {}
 
 func _ready() -> void:
-	_right_hand_attachment = get_node_or_null(right_hand_attachment_path) as Node3D
-	_left_hand_attachment = get_node_or_null(left_hand_attachment_path) as Node3D
+	_right_hand_attachment = get_node_or_null(right_hand_attachment_path) as XRGptAttachmentPoint
+	_left_hand_attachment = get_node_or_null(left_hand_attachment_path) as XRGptAttachmentPoint
 
 func attach_slot(slot: XRGptItemSlot) -> bool:
 	if slot == null or slot.item == null:
 		return false
-	var attachment := _attachment_for_slot(slot)
-	if attachment == null:
+	var attachment: XRGptAttachmentPoint = _attachment_for_slot(slot)
+	if attachment == null or not attachment.can_attach(slot.item):
 		return false
 	detach_slot(slot)
 	var visual: Node3D = XRGptItemRuntime.spawn_instance(slot.item, attachment)
@@ -44,7 +44,7 @@ func detach_slot(slot: XRGptItemSlot) -> void:
 		visual.queue_free()
 	_attached_visuals.erase(slot.slot_id)
 
-func _attachment_for_slot(slot: XRGptItemSlot) -> Node3D:
+func _attachment_for_slot(slot: XRGptItemSlot) -> XRGptAttachmentPoint:
 	match slot.slot_id:
 		"01":
 			return _right_hand_attachment
