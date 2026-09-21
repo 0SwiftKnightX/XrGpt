@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://gameplay/world/day_night_cycle.gd" id="9"]
 [ext_resource type="Script" path="res://gameplay/world/light_exposure.gd" id="10"]
 [ext_resource type="Script" path="res://gameplay/world/xr_player_spawn.gd" id="13"]
+[ext_resource type="Script" path="res://gameplay/equipment/attachment_controller.gd" id="14"]
 [ext_resource type="PackedScene" path="res://gameplay/test_items/black_cube_test.tscn" id="11"]
 [ext_resource type="PackedScene" path="res://gameplay/creative/creative_item_index.tscn" id="12"]
 
@@ -82,8 +83,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 left_controller_path = NodePath("../LeftController")
 camera_path = NodePath("../XRCamera3D")
 
+[node name="AttachmentController" type="Node3D" parent="XROrigin3D"]
+script = ExtResource("14")
+right_hand_attachment_path = NodePath("../RightController/RightHandAttachment")
+left_hand_attachment_path = NodePath("../LeftController/LeftHandAttachment")
+
 [node name="ActiveEquipmentController" parent="XROrigin3D" instance=ExtResource("7")]
 camera_path = NodePath("../XRCamera3D")
+attachment_controller_path = NodePath("../AttachmentController")
 
 [node name="HUDBoard" parent="XROrigin3D" instance=ExtResource("8")]
 camera_path = NodePath("../XRCamera3D")
@@ -92,6 +99,12 @@ camera_path = NodePath("../XRCamera3D")
 owner_inventory_path = NodePath("../InventoryController")
 initial_role = 3
 position = Vector3(0, 1.25, -1.0)
+
+[node name="RightHandAttachment" type="Marker3D" parent="XROrigin3D/RightController"]
+position = Vector3(0, -0.02, -0.08)
+
+[node name="LeftHandAttachment" type="Marker3D" parent="XROrigin3D/LeftController"]
+position = Vector3(0, -0.02, -0.08)
 
 [node name="WorldInteraction" type="Node" parent="XROrigin3D"]
 script = ExtResource("6")
