@@ -8,12 +8,16 @@ extends RefCounted
 const ROCK_DEFINITION: XRGptItemDefinition = preload("res://gameplay/items/rock_definition.tres")
 const STONE_DEFINITION: XRGptItemDefinition = preload("res://gameplay/items/stone_definition.tres")
 const BLACK_CUBE_DEFINITION: XRGptItemDefinition = preload("res://gameplay/items/black_cube_test_item.tres")
+const TEST_RING_DEFINITION: XRGptItemDefinition = preload("res://gameplay/items/ring_definition.tres")
+const TEST_GLOVE_DEFINITION: XRGptItemDefinition = preload("res://gameplay/items/glove_definition.tres")
 
 static func get_all_definitions() -> Array[XRGptItemDefinition]:
 	return [
 		ROCK_DEFINITION,
 		STONE_DEFINITION,
-		BLACK_CUBE_DEFINITION
+		BLACK_CUBE_DEFINITION,
+		TEST_RING_DEFINITION,
+		TEST_GLOVE_DEFINITION
 	]
 
 static func find_definition(item_id: String) -> XRGptItemDefinition:
