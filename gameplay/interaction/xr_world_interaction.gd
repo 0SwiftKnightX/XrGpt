@@ -149,6 +149,7 @@ func _create_held_visual() -> bool:
 		body.collision_mask = 0
 	visual.position = Vector3(0.0, -0.02, -0.12)
 	visual.rotation = Vector3.ZERO
+	return true
 
 func _clear_held_visual() -> void:
 	if _held_visual != null and is_instance_valid(_held_visual):
