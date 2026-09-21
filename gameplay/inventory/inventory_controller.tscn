@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://gameplay/inventory/item_slot.gd" id="2"]
 
 [sub_resource type="BoxShape3D" id="SlotShape"]
-size = Vector3(0.34, 0.08, 0.34)
+size = Vector3(0.34, 0.08, 0.08)
 
 [sub_resource type="StandardMaterial3D" id="BoardMat"]
 albedo_color = Color(0.06, 0.07, 0.09, 0.96)
@@ -12,7 +12,7 @@ metallic = 0.15
 roughness = 0.72
 
 [sub_resource type="BoxMesh" id="BoardMesh"]
-size = Vector3(2.0, 0.06, 1.45)
+size = Vector3(2.0, 1.45, 0.06)
 
 [sub_resource type="BoxShape3D" id="BoardShape"]
 size = Vector3(2.0, 0.06, 1.45)
@@ -23,7 +23,7 @@ metallic = 0.1
 roughness = 0.65
 
 [sub_resource type="BoxMesh" id="SlotMesh"]
-size = Vector3(0.34, 0.045, 0.34)
+size = Vector3(0.34, 0.34, 0.045)
 
 [node name="InventoryController" type="Node3D"]
 script = ExtResource("1")
@@ -42,12 +42,12 @@ text = "INVENTORY"
 font_size = 32
 outline_size = 8
 pixel_size = 0.0025
-position = Vector3(0, 0.08, -0.58)
+position = Vector3(0, 0.58, -0.04)
 
 [node name="InventorySlot1" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "1"
-position = Vector3(-0.72, 0.09, -0.25)
+position = Vector3(-0.72, 0.25, 0.04)
 
 [node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot1"]
 collision_layer = 4
@@ -59,7 +59,7 @@ shape = SubResource("SlotShape")
 [node name="ItemLabel" type="Label3D" parent="InventoryBoard/InventorySlot1"]
 font_size = 12
 pixel_size = 0.0018
-position = Vector3(0, 0.08, 0)
+position = Vector3(0, 0.08, 0.04)
 
 [node name="Visual" type="MeshInstance3D" parent="InventoryBoard/InventorySlot1"]
 mesh = SubResource("SlotMesh")
@@ -68,7 +68,7 @@ material_override = SubResource("SlotMat")
 [node name="InventorySlot2" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "2"
-position = Vector3(-0.24, 0.09, -0.25)
+position = Vector3(-0.24, 0.25, 0.04)
 
 [node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot2"]
 collision_layer = 4
@@ -89,7 +89,7 @@ material_override = SubResource("SlotMat")
 [node name="InventorySlot3" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "3"
-position = Vector3(0.24, 0.09, -0.25)
+position = Vector3(0.24, 0.25, 0.04)
 
 [node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot3"]
 collision_layer = 4
@@ -110,7 +110,7 @@ material_override = SubResource("SlotMat")
 [node name="InventorySlot4" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "4"
-position = Vector3(0.72, 0.09, -0.25)
+position = Vector3(0.72, 0.25, 0.04)
 
 [node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot4"]
 collision_layer = 4
@@ -131,7 +131,7 @@ material_override = SubResource("SlotMat")
 [node name="InventorySlot5" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "5"
-position = Vector3(-0.72, 0.09, 0.25)
+position = Vector3(-0.72, -0.25, 0.04)
 
 [node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot5"]
 collision_layer = 4
@@ -152,7 +152,7 @@ material_override = SubResource("SlotMat")
 [node name="InventorySlot6" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "6"
-position = Vector3(-0.24, 0.09, 0.25)
+position = Vector3(-0.24, -0.25, 0.04)
 
 [node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot6"]
 collision_layer = 4
@@ -173,7 +173,7 @@ material_override = SubResource("SlotMat")
 [node name="InventorySlot7" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "7"
-position = Vector3(0.24, 0.09, 0.25)
+position = Vector3(0.24, -0.25, 0.04)
 
 [node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot7"]
 collision_layer = 4
@@ -194,7 +194,7 @@ material_override = SubResource("SlotMat")
 [node name="InventorySlot8" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "8"
-position = Vector3(0.72, 0.09, 0.25)
+position = Vector3(0.72, -0.25, 0.04)
 
 [node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot8"]
 collision_layer = 4
