@@ -160,6 +160,8 @@ static func _check_controller_transactions(errors: Array[String]) -> void:
 	slot_b.set_item(item_b)
 
 	var failures: Array[String] = []
+	var detached_signals: Array[String] = []
+	controller.attachment_detached.connect(func(slot_id: String, attachment_id: String): detached_signals.append(slot_id + ":" + attachment_id))
 	controller.attachment_failed.connect(func(slot_id: String, reason: String): failures.append(slot_id + ":" + reason))
 	var successes := 0
 	controller.attachment_succeeded.connect(func(_slot_id: String, _attachment_id: String): successes += 1)
