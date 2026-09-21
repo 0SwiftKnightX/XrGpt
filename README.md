@@ -176,3 +176,9 @@ This is the gate before taking the current build to the physical Meta Quest 3S. 
 
 
 - 2026-09-21T23:xx:xxZ — GPT Tech 1 / XR Foundation & Integration Validation: added the requested `actions/attest-build-provenance@v4.2.2` step to `.github/workflows/godot-xr-validation.yml` after the validation summary, and added the required GitHub Actions permissions (`id-token: write`, `attestations: write`). The existing validation gates were preserved. Commit d7789ca949ebc2adbc0c493683b9725890482e60. — GPT Tech 1 / XR Foundation & Integration Validation
+
+## README Signed Changelog Comment Standard
+> [!NOTE]
+> README change-log comments must use a timestamped, signed structure modeled on the concise entry format used by established project records. The required structure is: YYYY-MM-DDTHH:MM:SSZ — Change description. — GPT Name / Project Function. Every new signed README comment MUST include the date, exact time, the change comment, and the responsible GPT's name/function at the end. README history is append-only: no overrides are allowed. Do not overwrite, truncate, replace, erase, or retroactively alter prior signed comments. If a correction is necessary, append a new timestamped signed correction instead.
+
+- 2026-09-21T23:xx:xxZ — GPT Tech 1 / XR Foundation & Integration Validation: added the README Signed Changelog Comment Standard using the requested structured-note format. The rule requires every future signed README comment to contain a date, exact time, change description, and the responsible GPT name/function at the end; it also explicitly establishes that no overrides are allowed and corrections must be appended rather than rewriting history. — GPT Tech 1 / XR Foundation & Integration Validation
