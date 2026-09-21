@@ -78,9 +78,12 @@ func _find_attachment_for_slot(slot: XRGptItemSlot) -> XRGptAttachmentPoint:
 	if slot == null or slot.item == null:
 		return null
 	for point in _attachment_points:
-		if point.enabled and not point.slot_ids.is_empty() and point.slot_ids.has(slot.slot_id):
-			point.current_slot_id = slot.slot_id
-			if point.can_attach(slot.item):
-				return point
-			point.current_slot_id = ""
+		if not point.enabled:
+			continue
+		if not point.slot_ids.is_empty() and not point.slot_ids.has(slot.slot_id):
+			continue
+		point.current_slot_id = slot.slot_id
+		if point.can_attach(slot.item):
+			return point
+		point.current_slot_id = ""
 	return null
