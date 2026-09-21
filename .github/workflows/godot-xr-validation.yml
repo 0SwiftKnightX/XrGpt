@@ -1,0 +1,30 @@
+name: Godot XR Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Godot 4.7
+        uses: firebelley/setup-godot@v2
+        with:
+          version: 4.7.0-stable
+          use-dotnet: false
+
+      - name: Import and parse project
+        run: godot --headless --path . --editor --quit
+
+      - name: Run XR connection audit
+        run: godot --headless --path . res://gameplay/validation/xrgpt_connection_audit_runner.tscn
