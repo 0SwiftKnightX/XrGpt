@@ -20,6 +20,7 @@ var _inventory: XRGptInventoryController
 var _active_equipment: XRGptActiveEquipmentController
 var _held_item: XRGptItemInstance
 var _origin_slot: XRGptItemSlot
+var _held_visual: Node3D
 
 signal interaction_succeeded(action_name: String, instance: XRGptItemInstance)
 signal interaction_failed(action_name: String, reason: String)
@@ -119,6 +120,7 @@ func _grab_from_slot(slot: XRGptItemSlot) -> void:
 			_held_item = null
 			_origin_slot = null
 			interaction_failed.emit("slot_grab", "inventory_remove_failed")
+			return
 	elif not slot.inventory_slot and _active_equipment:
 		if not _active_equipment.remove_item(_held_item):
 			_held_item = null
@@ -140,6 +142,7 @@ func _release_held_item() -> void:
 		elif not target.inventory_slot and _active_equipment:
 			placed = _active_equipment.place_item_in_slot(_held_item, target)
 		if placed:
+			_clear_held_visual()
 			interaction_succeeded.emit("item_slot_placed", _held_item)
 			_held_item = null
 			_origin_slot = null
@@ -154,13 +157,16 @@ func _release_held_item() -> void:
 		elif not _origin_slot.inventory_slot and _active_equipment:
 			placed = _active_equipment.place_item_in_slot(_held_item, _origin_slot)
 		if placed:
+			_clear_held_visual()
 			interaction_succeeded.emit("item_restored_to_origin", _held_item)
 
 	if not placed and _held_item != null:
 		if _inventory and _inventory.add_item_instance(_held_item):
+			_clear_held_visual()
 			placed = true
 			interaction_succeeded.emit("item_returned_to_inventory", _held_item)
 		else:
+			_clear_held_visual()
 			interaction_failed.emit("item_release", "no_valid_destination")
 
 	_held_item = null
@@ -214,9 +220,19 @@ func _place_held_item_in_world(hit: Dictionary) -> bool:
 	var definition := XRGptItemCatalog.find_definition(_held_item.definition_id)
 	if definition == null:
 		return false
-	var world_item := XRGptItemRuntime.spawn_instance(_held_item, get_tree().current_scene)
-	if world_item == null:
-		return false
+	var world_item: Node3D = _held_visual
+	if world_item == null or not is_instance_valid(world_item):
+		world_item = XRGptItemRuntime.spawn_instance(_held_item, get_tree().current_scene)
+		if world_item == null:
+			return false
+	else:
+		world_item.reparent(get_tree().current_scene, true)
+		_held_visual = null
+	var body: RigidBody3D = world_item as RigidBody3D
+	if body != null:
+		body.freeze = false
+		body.collision_layer = 4
+		body.collision_mask = 5
 	var normal: Vector3 = hit.get("normal", Vector3.UP)
 	var position: Vector3 = hit.get("position", Vector3.ZERO)
 	world_item.global_position = position + normal.normalized() * 0.06
