@@ -1,44 +1,59 @@
 class_name XRGptAttachmentController
 extends Node3D
 
-## First attachment layer: equipment can become a physical child of a tracked
-## hand/controller without changing the inventory item instance.
+## Resolves equipment slots to attachment points by identity and compatibility.
+## There is no hard-coded "slot 01 = right hand" rule.
 
-@export var right_hand_attachment_path: NodePath
-@export var left_hand_attachment_path: NodePath
+@export var attachment_root_path: NodePath
 
-var _right_hand_attachment: XRGptAttachmentPoint
-var _left_hand_attachment: XRGptAttachmentPoint
+var _attachment_points: Array[XRGptAttachmentPoint] = []
 var _attached_visuals: Dictionary = {}
 
 func _ready() -> void:
-	_right_hand_attachment = get_node_or_null(right_hand_attachment_path) as XRGptAttachmentPoint
-	_left_hand_attachment = get_node_or_null(left_hand_attachment_path) as XRGptAttachmentPoint
+	_refresh_attachment_points()
+
+func _refresh_attachment_points() -> void:
+	_attachment_points.clear()
+	var root: Node = get_node_or_null(attachment_root_path) if not attachment_root_path.is_empty() else self
+	if root == null:
+		root = self
+	_collect_attachment_points(root)
+
+func _collect_attachment_points(node: Node) -> void:
+	for child: Node in node.get_children():
+		if child is XRGptAttachmentPoint:
+			_attachment_points.append(child as XRGptAttachmentPoint)
+		_collect_attachment_points(child)
 
 func attach_slot(slot: XRGptItemSlot) -> bool:
 	if slot == null or slot.item == null:
 		return false
-	var attachment: XRGptAttachmentPoint = _attachment_for_slot(slot)
+	_refresh_attachment_points()
+	var attachment: XRGptAttachmentPoint = _find_attachment_for_slot(slot)
 	if attachment == null:
 		return false
+	if attachment.exclusive and not attachment.current_slot_id.is_empty() and attachment.current_slot_id != slot.slot_id:
+		return false
+	detach_slot(slot)
 	attachment.current_slot_id = slot.slot_id
 	if not attachment.can_attach(slot.item):
 		attachment.current_slot_id = ""
 		return false
-	detach_slot(slot)
 	var visual: Node3D = XRGptItemRuntime.spawn_instance(slot.item, attachment)
 	if visual == null:
+		attachment.current_slot_id = ""
 		return false
 	var body: RigidBody3D = visual as RigidBody3D
-	if body != null:
+	if body != null and attachment.hide_physics_while_attached:
 		body.freeze = true
 		body.freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
 		body.collision_layer = 0
 		body.collision_mask = 0
-	var attachment_transform: Transform3D = attachment.get_attachment_transform()
-	visual.position = attachment_transform.origin
-	visual.basis = attachment_transform.basis
+	visual.transform = attachment.get_attachment_transform(slot.item)
 	_attached_visuals[slot.slot_id] = visual
+	slot.item.attachment_id = attachment.attachment_id
+	slot.item.attachment_type = attachment.attachment_type
+	slot.item.attachment_side = attachment.side
 	attachment.set_attachment_state(slot.slot_id, true)
 	return true
 
@@ -48,16 +63,24 @@ func detach_slot(slot: XRGptItemSlot) -> void:
 	var visual: Node3D = _attached_visuals.get(slot.slot_id) as Node3D
 	if visual != null and is_instance_valid(visual):
 		visual.queue_free()
-	var attachment: XRGptAttachmentPoint = _attachment_for_slot(slot)
+	var attachment: XRGptAttachmentPoint = _find_attachment_for_slot(slot)
 	if attachment != null:
 		attachment.set_attachment_state(slot.slot_id, false)
+	if slot.item != null:
+		slot.item.clear_attachment_state()
 	_attached_visuals.erase(slot.slot_id)
 
-func _attachment_for_slot(slot: XRGptItemSlot) -> XRGptAttachmentPoint:
-	match slot.slot_id:
-		"01":
-			return _right_hand_attachment
-		"02":
-			return _left_hand_attachment
-		_:
-			return null
+func get_attachment_points() -> Array[XRGptAttachmentPoint]:
+	_refresh_attachment_points()
+	return _attachment_points
+
+func _find_attachment_for_slot(slot: XRGptItemSlot) -> XRGptAttachmentPoint:
+	if slot == null or slot.item == null:
+		return null
+	for point in _attachment_points:
+		if point.enabled and not point.slot_ids.is_empty() and point.slot_ids.has(slot.slot_id):
+			point.current_slot_id = slot.slot_id
+			if point.can_attach(slot.item):
+				return point
+			point.current_slot_id = ""
+	return null
