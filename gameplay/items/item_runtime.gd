@@ -1,10 +1,17 @@
 class_name XRGptItemRuntime
 extends RefCounted
 
+## Test-only fault injection used by the Phase 1 regression suite.
+## Production code leaves this disabled; it allows deterministic validation of
+## rollback behavior when runtime visual creation fails after compatibility passes.
+static var test_force_spawn_failure := false
+
 ## Bridges an authoritative inventory ItemInstance to its procedural 3D runtime.
 ## The generated node carries the same item instance; no duplicate definition is created.
 
 static func spawn_instance(instance: XRGptItemInstance, parent: Node3D = null) -> Node3D:
+	if test_force_spawn_failure:
+		return null
 	if instance == null or instance.definition_id.is_empty():
 		return null
 	var definition: XRGptItemDefinition = XRGptItemCatalog.find_definition(instance.definition_id)
