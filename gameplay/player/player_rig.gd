@@ -164,19 +164,26 @@ func _add_finger_attachment_point(parent: Node3D, bone_name: String) -> void:
 	if not bone_name.ends_with("_l") and not bone_name.ends_with("_r"):
 		return
 	var finger_name := ""
+	var segment := 0
 	for candidate in ["thumb", "index", "middle", "ring", "little"]:
-		if bone_name.begins_with(candidate + "1_"):
-			finger_name = candidate
+		for candidate_segment in range(1, 4):
+			if bone_name.begins_with("%s%d_" % [candidate, candidate_segment]):
+				finger_name = candidate
+				segment = candidate_segment
+				break
+		if not finger_name.is_empty():
 			break
-	if finger_name.is_empty():
+	if finger_name.is_empty() or segment < 1:
 		return
 	var is_left := bone_name.ends_with("_l")
 	var side_name := "left" if is_left else "right"
+	var side_label := "Left" if is_left else "Right"
+	var suffix := "" if segment == 1 else ".%d" % segment
 	var point := XRGptAttachmentPoint.new()
-	point.name = "%sAttachmentPoint" % finger_name.capitalize()
+	point.name = "%sAttachmentPoint%d" % [finger_name.capitalize(), segment]
 	point.attachment_type = "Finger"
-	point.side = "Left" if is_left else "Right"
-	point.attachment_id = "finger.%s.%s" % [side_name, finger_name]
+	point.side = side_label
+	point.attachment_id = "finger.%s.%s%s" % [side_name, finger_name, suffix]
 	point.position_offset = Vector3(0, 0, -0.014)
 	point.accepts_categories = ["Equipment"]
 	parent.add_child(point)
