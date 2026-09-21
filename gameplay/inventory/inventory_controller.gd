@@ -29,7 +29,9 @@ func _ready() -> void:
 
 func _cache_slots() -> void:
 	_slots.clear()
-	for child in get_children():
+	if _board == null:
+		return
+	for child in _board.get_children():
 		if child is XRGptItemSlot:
 			_slots.append(child as XRGptItemSlot)
 	_slots.sort_custom(func(a, b): return a.slot_id < b.slot_id)
