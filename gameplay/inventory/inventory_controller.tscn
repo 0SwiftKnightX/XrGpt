@@ -44,170 +44,170 @@ outline_size = 8
 pixel_size = 0.0025
 position = Vector3(0, 0.08, -0.58)
 
-[node name="InventorySlot1" type="Node3D" parent="."]
+[node name="InventorySlot1" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "1"
 position = Vector3(-0.72, 0.09, -0.25)
 
-[node name="Interaction" type="Area3D" parent="InventorySlot1"]
+[node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot1"]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot1/Interaction"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventoryBoard/InventorySlot1/Interaction"]
 shape = SubResource("SlotShape")
 
-[node name="ItemLabel" type="Label3D" parent="InventorySlot1"]
+[node name="ItemLabel" type="Label3D" parent="InventoryBoard/InventorySlot1"]
 font_size = 12
 pixel_size = 0.0018
 position = Vector3(0, 0.08, 0)
 
-[node name="Visual" type="MeshInstance3D" parent="InventorySlot1"]
+[node name="Visual" type="MeshInstance3D" parent="InventoryBoard/InventorySlot1"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
-[node name="InventorySlot2" type="Node3D" parent="."]
+[node name="InventorySlot2" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "2"
 position = Vector3(-0.24, 0.09, -0.25)
 
-[node name="Interaction" type="Area3D" parent="InventorySlot2"]
+[node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot2"]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot2/Interaction"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventoryBoard/InventorySlot2/Interaction"]
 shape = SubResource("SlotShape")
 
-[node name="ItemLabel" type="Label3D" parent="InventorySlot2"]
+[node name="ItemLabel" type="Label3D" parent="InventoryBoard/InventorySlot2"]
 font_size = 12
 pixel_size = 0.0018
 position = Vector3(0, 0.08, 0)
 
-[node name="Visual" type="MeshInstance3D" parent="InventorySlot2"]
+[node name="Visual" type="MeshInstance3D" parent="InventoryBoard/InventorySlot2"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
-[node name="InventorySlot3" type="Node3D" parent="."]
+[node name="InventorySlot3" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "3"
 position = Vector3(0.24, 0.09, -0.25)
 
-[node name="Interaction" type="Area3D" parent="InventorySlot3"]
+[node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot3"]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot3/Interaction"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventoryBoard/InventorySlot3/Interaction"]
 shape = SubResource("SlotShape")
 
-[node name="ItemLabel" type="Label3D" parent="InventorySlot3"]
+[node name="ItemLabel" type="Label3D" parent="InventoryBoard/InventorySlot3"]
 font_size = 12
 pixel_size = 0.0018
 position = Vector3(0, 0.08, 0)
 
-[node name="Visual" type="MeshInstance3D" parent="InventorySlot3"]
+[node name="Visual" type="MeshInstance3D" parent="InventoryBoard/InventorySlot3"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
-[node name="InventorySlot4" type="Node3D" parent="."]
+[node name="InventorySlot4" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "4"
 position = Vector3(0.72, 0.09, -0.25)
 
-[node name="Interaction" type="Area3D" parent="InventorySlot4"]
+[node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot4"]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot4/Interaction"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventoryBoard/InventorySlot4/Interaction"]
 shape = SubResource("SlotShape")
 
-[node name="ItemLabel" type="Label3D" parent="InventorySlot4"]
+[node name="ItemLabel" type="Label3D" parent="InventoryBoard/InventorySlot4"]
 font_size = 12
 pixel_size = 0.0018
 position = Vector3(0, 0.08, 0)
 
-[node name="Visual" type="MeshInstance3D" parent="InventorySlot4"]
+[node name="Visual" type="MeshInstance3D" parent="InventoryBoard/InventorySlot4"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
-[node name="InventorySlot5" type="Node3D" parent="."]
+[node name="InventorySlot5" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "5"
 position = Vector3(-0.72, 0.09, 0.25)
 
-[node name="Interaction" type="Area3D" parent="InventorySlot5"]
+[node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot5"]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot5/Interaction"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventoryBoard/InventorySlot5/Interaction"]
 shape = SubResource("SlotShape")
 
-[node name="ItemLabel" type="Label3D" parent="InventorySlot5"]
+[node name="ItemLabel" type="Label3D" parent="InventoryBoard/InventorySlot5"]
 font_size = 12
 pixel_size = 0.0018
 position = Vector3(0, 0.08, 0)
 
-[node name="Visual" type="MeshInstance3D" parent="InventorySlot5"]
+[node name="Visual" type="MeshInstance3D" parent="InventoryBoard/InventorySlot5"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
-[node name="InventorySlot6" type="Node3D" parent="."]
+[node name="InventorySlot6" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "6"
 position = Vector3(-0.24, 0.09, 0.25)
 
-[node name="Interaction" type="Area3D" parent="InventorySlot6"]
+[node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot6"]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot6/Interaction"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventoryBoard/InventorySlot6/Interaction"]
 shape = SubResource("SlotShape")
 
-[node name="ItemLabel" type="Label3D" parent="InventorySlot6"]
+[node name="ItemLabel" type="Label3D" parent="InventoryBoard/InventorySlot6"]
 font_size = 12
 pixel_size = 0.0018
 position = Vector3(0, 0.08, 0)
 
-[node name="Visual" type="MeshInstance3D" parent="InventorySlot6"]
+[node name="Visual" type="MeshInstance3D" parent="InventoryBoard/InventorySlot6"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
-[node name="InventorySlot7" type="Node3D" parent="."]
+[node name="InventorySlot7" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "7"
 position = Vector3(0.24, 0.09, 0.25)
 
-[node name="Interaction" type="Area3D" parent="InventorySlot7"]
+[node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot7"]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot7/Interaction"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventoryBoard/InventorySlot7/Interaction"]
 shape = SubResource("SlotShape")
 
-[node name="ItemLabel" type="Label3D" parent="InventorySlot7"]
+[node name="ItemLabel" type="Label3D" parent="InventoryBoard/InventorySlot7"]
 font_size = 12
 pixel_size = 0.0018
 position = Vector3(0, 0.08, 0)
 
-[node name="Visual" type="MeshInstance3D" parent="InventorySlot7"]
+[node name="Visual" type="MeshInstance3D" parent="InventoryBoard/InventorySlot7"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
 
-[node name="InventorySlot8" type="Node3D" parent="."]
+[node name="InventorySlot8" type="Node3D" parent="InventoryBoard"]
 script = ExtResource("2")
 slot_id = "8"
 position = Vector3(0.72, 0.09, 0.25)
 
-[node name="Interaction" type="Area3D" parent="InventorySlot8"]
+[node name="Interaction" type="Area3D" parent="InventoryBoard/InventorySlot8"]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="InventorySlot8/Interaction"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InventoryBoard/InventorySlot8/Interaction"]
 shape = SubResource("SlotShape")
 
-[node name="ItemLabel" type="Label3D" parent="InventorySlot8"]
+[node name="ItemLabel" type="Label3D" parent="InventoryBoard/InventorySlot8"]
 font_size = 12
 pixel_size = 0.0018
 position = Vector3(0, 0.08, 0)
 
-[node name="Visual" type="MeshInstance3D" parent="InventorySlot8"]
+[node name="Visual" type="MeshInstance3D" parent="InventoryBoard/InventorySlot8"]
 mesh = SubResource("SlotMesh")
 material_override = SubResource("SlotMat")
