@@ -133,13 +133,13 @@ func _grab_from_slot(slot: XRGptItemSlot) -> void:
 		return
 	_create_held_visual()
 
-func _create_held_visual() -> void:
+func _create_held_visual() -> bool:
 	if _held_item == null or _active_controller == null:
-		return
+		return false
 	_clear_held_visual()
 	var visual: Node3D = XRGptItemRuntime.spawn_instance(_held_item, _active_controller)
 	if visual == null:
-		return
+		return false
 	_held_visual = visual
 	var body: RigidBody3D = visual as RigidBody3D
 	if body != null:
