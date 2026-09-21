@@ -37,22 +37,24 @@ func attach_slot(slot: XRGptItemSlot) -> bool:
 	_refresh_attachment_points()
 	var attachment: XRGptAttachmentPoint = _find_attachment_for_slot(slot)
 	if attachment == null:
-		attachment_failed(slot.slot_id, "NO_COMPATIBLE_ATTACHMENT")
+		var reason := "ATTACHMENT_OCCUPIED" if _has_occupied_compatible_attachment(slot) else "NO_COMPATIBLE_ATTACHMENT"
+		attachment_failed(slot.slot_id, reason)
 		return false
-	if attachment.exclusive and not attachment.current_slot_id.is_empty() and attachment.current_slot_id != slot.slot_id:
-		attachment_failed(slot.slot_id, "ATTACHMENT_OCCUPIED")
-		return false
-	detach_slot(slot)
-	attachment.current_slot_id = slot.slot_id
-	if not attachment.can_attach(slot.item):
-		attachment.current_slot_id = ""
-		attachment_failed(slot.slot_id, "COMPATIBILITY_REJECTED")
-		return false
+	var previous_attachment: XRGptAttachmentPoint = _slot_attachments.get(slot.slot_id) as XRGptAttachmentPoint
+	var previous_visual: Node3D = _attached_visuals.get(slot.slot_id) as Node3D
 	var visual: Node3D = XRGptItemRuntime.spawn_instance(slot.item, attachment)
 	if visual == null:
-		attachment.current_slot_id = ""
 		attachment_failed(slot.slot_id, "RUNTIME_VISUAL_FAILED")
 		return false
+	if previous_attachment != null and previous_attachment != attachment:
+		previous_attachment.set_attachment_state(slot.slot_id, false)
+		_slot_attachments.erase(slot.slot_id)
+		_attached_visuals.erase(slot.slot_id)
+		if previous_visual != null and is_instance_valid(previous_visual):
+			previous_visual.queue_free()
+	elif previous_visual != null and is_instance_valid(previous_visual):
+		previous_visual.queue_free()
+	attachment.current_slot_id = slot.slot_id
 	var body: RigidBody3D = visual as RigidBody3D
 	if body != null and attachment.hide_physics_while_attached:
 		body.freeze = true
@@ -96,15 +98,24 @@ func _find_attachment_for_slot(slot: XRGptItemSlot) -> XRGptAttachmentPoint:
 	if slot == null or slot.item == null:
 		return null
 	for point in _attachment_points:
+		if point.can_attach_for_slot(slot.item, slot.slot_id):
+			return point
+	return null
+
+func _has_occupied_compatible_attachment(slot: XRGptItemSlot) -> bool:
+	if slot == null or slot.item == null:
+		return false
+	for point in _attachment_points:
 		if not point.enabled:
 			continue
 		if not point.slot_ids.is_empty() and not point.slot_ids.has(slot.slot_id):
 			continue
-		if point.exclusive and not point.current_slot_id.is_empty() and point.current_slot_id != slot.slot_id:
-			continue
 		var previous_slot_id := point.current_slot_id
-		point.current_slot_id = slot.slot_id
-		if point.can_attach(slot.item):
-			return point
+		if previous_slot_id.is_empty() or previous_slot_id == slot.slot_id:
+			continue
+		point.current_slot_id = ""
+		var compatible := point.can_attach_for_slot(slot.item, slot.slot_id)
 		point.current_slot_id = previous_slot_id
-	return null
+		if compatible:
+			return true
+	return false
