@@ -45,11 +45,15 @@ func toggle() -> void:
 		_board.visible = is_open
 
 func place_item(instance: XRGptItemInstance) -> bool:
+	if instance == null:
+		return false
 	for slot in _slots:
-		if slot.set_item(instance):
-			if _attachment_controller != null:
-				_attachment_controller.attach_slot(slot)
-			return true
+		if not slot.set_item(instance):
+			continue
+		if _attachment_controller != null and not _attachment_controller.attach_slot(slot):
+			slot.clear_item()
+			return false
+		return true
 	return false
 
 func place_item_in_slot(instance: XRGptItemInstance, slot: XRGptItemSlot) -> bool:
@@ -61,9 +65,12 @@ func place_item_in_slot(instance: XRGptItemInstance, slot: XRGptItemSlot) -> boo
 		if existing.item == instance:
 			return false
 	var accepted: bool = slot.set_item(instance)
-	if accepted and _attachment_controller != null:
-		_attachment_controller.attach_slot(slot)
-	return accepted
+	if not accepted:
+		return false
+	if _attachment_controller != null and not _attachment_controller.attach_slot(slot):
+		slot.clear_item()
+		return false
+	return true
 
 func remove_item(instance: XRGptItemInstance) -> bool:
 	for slot in _slots:
