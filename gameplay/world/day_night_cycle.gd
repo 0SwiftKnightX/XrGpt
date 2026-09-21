@@ -32,8 +32,8 @@ func _process(delta: float) -> void:
 
 func _update_lights() -> void:
 	var sun_angle: float = (time_of_day / 24.0) * TAU - PI * 0.5
-	var daylight: float = clamp(sin(sun_angle), 0.0, 1.0)
-	var moonlight: float = clamp(-sin(sun_angle), 0.0, 1.0)
+	var daylight: float = clampf(sin(sun_angle), 0.0, 1.0)
+	var moonlight: float = clampf(-sin(sun_angle), 0.0, 1.0)
 
 	sun.rotation_degrees = Vector3(rad_to_deg(sun_angle), 0.0, 0.0)
 	moon.rotation_degrees = Vector3(rad_to_deg(sun_angle + PI), 0.0, 0.0)
