@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://gameplay/world/light_exposure.gd" id="10"]
 [ext_resource type="Script" path="res://gameplay/world/xr_player_spawn.gd" id="13"]
 [ext_resource type="Script" path="res://gameplay/equipment/attachment_controller.gd" id="14"]
+[ext_resource type="Script" path="res://gameplay/equipment/attachment_point.gd" id="15"]
 [ext_resource type="PackedScene" path="res://gameplay/test_items/black_cube_test.tscn" id="11"]
 [ext_resource type="PackedScene" path="res://gameplay/creative/creative_item_index.tscn" id="12"]
 
@@ -101,9 +102,21 @@ initial_role = 3
 position = Vector3(0, 1.25, -1.0)
 
 [node name="RightHandAttachment" type="Marker3D" parent="XROrigin3D/RightController"]
+script = ExtResource("15")
+attachment_id = "hand.right"
+attachment_type = "Hand"
+side = "Right"
+accepts_categories = ["Equipment"]
+slot_ids = ["01"]
 position = Vector3(0, -0.02, -0.08)
 
 [node name="LeftHandAttachment" type="Marker3D" parent="XROrigin3D/LeftController"]
+script = ExtResource("15")
+attachment_id = "hand.left"
+attachment_type = "Hand"
+side = "Left"
+accepts_categories = ["Equipment"]
+slot_ids = ["02"]
 position = Vector3(0, -0.02, -0.08)
 
 [node name="WorldInteraction" type="Node" parent="XROrigin3D"]
