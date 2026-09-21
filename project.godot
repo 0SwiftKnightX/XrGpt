@@ -2,7 +2,7 @@
 
 config/name="XrGpt XR Foundation"
 run/main_scene="uid://cqow47bch5ocs"
-config/features=PackedStringArray("4.7", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [display]
