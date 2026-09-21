@@ -4,4 +4,3 @@
 
 [node name="AttachmentRegressionRunner" type="Node"]
 script = ExtResource("1_runner")
-run_count = 3
