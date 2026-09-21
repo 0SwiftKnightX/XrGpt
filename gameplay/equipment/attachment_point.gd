@@ -15,6 +15,7 @@ var side: String = "Any"
 @export_category("Compatibility")
 @export var accepts_categories: Array[String] = ["Equipment"]
 @export var accepted_item_ids: Array[String] = []
+@export var accepted_rarities: Array[String] = []
 @export var slot_ids: Array[String] = []
 @export var exclusive: bool = true
 @export var enabled: bool = true
@@ -42,6 +43,8 @@ func can_attach(instance: XRGptItemInstance) -> bool:
 	if not accepts_categories.is_empty() and not accepts_categories.has(instance.category):
 		return false
 	if not accepted_item_ids.is_empty() and not accepted_item_ids.has(instance.definition_id):
+		return false
+	if not accepted_rarities.is_empty() and not accepted_rarities.has(instance.rarity):
 		return false
 	var definition: XRGptItemDefinition = XRGptItemCatalog.find_definition(instance.definition_id)
 	if definition == null or definition.attachment_profile == null:
