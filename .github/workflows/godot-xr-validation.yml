@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout
@@ -90,8 +90,9 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload validation evidence
+        id: upload_validation_evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: xr-validation-evidence-${{ github.run_id }}
           path: |
@@ -104,3 +105,6 @@ jobs:
       - name: Attest Build Provenance
         if: success()
         uses: actions/attest-build-provenance@v4.2.2
+        with:
+          subject-digest: ${{ steps.upload_validation_evidence.outputs.artifact-digest }}
+          subject-name: xr-validation-evidence-${{ github.run_id }}
