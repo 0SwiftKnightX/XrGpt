@@ -78,7 +78,7 @@ shadow_enabled = true
 script = ExtResource("10")
 
 [node name="XROrigin3D" parent="." instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0)
 
 [node name="InventoryController" parent="XROrigin3D" instance=ExtResource("5")]
 left_controller_path = NodePath("../LeftController")
@@ -86,8 +86,7 @@ camera_path = NodePath("../XRCamera3D")
 
 [node name="AttachmentController" type="Node3D" parent="XROrigin3D"]
 script = ExtResource("14")
-right_hand_attachment_path = NodePath("../RightController/RightHandAttachment")
-left_hand_attachment_path = NodePath("../LeftController/LeftHandAttachment")
+attachment_root_path = NodePath("../PlayerRig")
 
 [node name="ActiveEquipmentController" parent="XROrigin3D" instance=ExtResource("7")]
 camera_path = NodePath("../XRCamera3D")
@@ -104,6 +103,7 @@ position = Vector3(0, 1.25, -1.0)
 [node name="RightHandAttachment" type="Marker3D" parent="XROrigin3D/RightController"]
 script = ExtResource("15")
 attachment_id = "hand.right"
+display_name = "Right Hand"
 attachment_type = "Hand"
 side = "Right"
 accepts_categories = ["Equipment"]
@@ -113,6 +113,7 @@ position = Vector3(0, -0.02, -0.08)
 [node name="LeftHandAttachment" type="Marker3D" parent="XROrigin3D/LeftController"]
 script = ExtResource("15")
 attachment_id = "hand.left"
+display_name = "Left Hand"
 attachment_type = "Hand"
 side = "Left"
 accepts_categories = ["Equipment"]
