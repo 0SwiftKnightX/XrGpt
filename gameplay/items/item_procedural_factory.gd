@@ -24,6 +24,10 @@ static func create_world_item(definition: XRGptItemDefinition, owner_id: String 
 			return _create_physical_block(canonical, owner_id, instance, Vector3(1.0, 1.0, 1.0), Color(0.46, 0.45, 0.42), 0.45)
 		"test.black_cube":
 			return _create_black_cube(canonical, instance)
+		"equipment.test_ring":
+			return _create_ring(canonical, instance)
+		"equipment.test_glove":
+			return _create_glove(canonical, instance)
 		_:
 			return null
 
@@ -120,4 +124,70 @@ static func _create_black_cube(definition: XRGptItemDefinition, instance: XRGptI
 	projectile.set("angular_damp", 0.15)
 	body.add_child(projectile)
 
+	return body
+
+
+static func _create_ring(definition: XRGptItemDefinition, instance: XRGptItemInstance) -> RigidBody3D:
+	var body := RigidBody3D.new()
+	body.name = "TestRingProcedural"
+	body.set_script(load("res://gameplay/items/procedural_pickable.gd"))
+	var pickable := body as XRGptProceduralPickable
+	if pickable != null:
+		pickable.bind_item_instance(instance)
+	body.mass = 0.02
+	body.collision_layer = 4
+	body.collision_mask = 5
+
+	var mesh := TorusMesh.new()
+	mesh.inner_radius = 0.009
+	mesh.outer_radius = 0.013
+	mesh.rings = 16
+	mesh.ring_segments = 8
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(0.65, 0.67, 0.72)
+	material.metallic = 0.85
+	material.roughness = 0.22
+	var visual := MeshInstance3D.new()
+	visual.name = "Visual"
+	visual.mesh = mesh
+	visual.material_override = material
+	body.add_child(visual)
+
+	var shape := CollisionShape3D.new()
+	shape.name = "CollisionShape3D"
+	var collision := TorusShape3D.new()
+	collision.inner_radius = 0.009
+	collision.outer_radius = 0.013
+	shape.shape = collision
+	body.add_child(shape)
+	return body
+
+static func _create_glove(definition: XRGptItemDefinition, instance: XRGptItemInstance) -> RigidBody3D:
+	var body := RigidBody3D.new()
+	body.name = "TestGloveProcedural"
+	body.set_script(load("res://gameplay/items/procedural_pickable.gd"))
+	var pickable := body as XRGptProceduralPickable
+	if pickable != null:
+		pickable.bind_item_instance(instance)
+	body.mass = 0.05
+	body.collision_layer = 4
+	body.collision_mask = 5
+
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(0.08, 0.045, 0.11)
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(0.08, 0.09, 0.11)
+	material.roughness = 0.9
+	var visual := MeshInstance3D.new()
+	visual.name = "Visual"
+	visual.mesh = mesh
+	visual.material_override = material
+	body.add_child(visual)
+
+	var shape := CollisionShape3D.new()
+	shape.name = "CollisionShape3D"
+	var collision := BoxShape3D.new()
+	collision.size = mesh.size
+	shape.shape = collision
+	body.add_child(shape)
 	return body
