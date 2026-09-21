@@ -11,6 +11,7 @@ static func run(root: Node) -> Array[String]:
 		return errors
 	_check_catalog(errors)
 	_check_main_connections(root, errors)
+	_check_world_environment_foundation(root, errors)
 	_check_attachment_topology(root, errors)
 	_check_instance_and_runtime_contract(errors)
 	return errors
@@ -94,6 +95,18 @@ static func _check_catalog(errors: Array[String]) -> void:
 			if generated.get_parent() != null:
 				generated.get_parent().remove_child(generated)
 			generated.free()
+
+static func _check_world_environment_foundation(root: Node, errors: Array[String]) -> void:
+	var world_root := root.get_node_or_null("WorldEnvironmentRoot") as XRGptWorldEnvironmentRoot
+	if world_root == null:
+		errors.append("WORLD_ENVIRONMENT_ROOT_MISSING: Main/WorldEnvironmentRoot")
+		return
+	if not world_root.is_foundation_ready():
+		errors.append("WORLD_ENVIRONMENT_FOUNDATION_NOT_READY")
+	var required_children := ["TerrainRegions", "BiomeRegions", "ResourceSpawns", "WorldInteractionPoints", "PersistentWorldData"]
+	for child_name in required_children:
+		if world_root.get_node_or_null(child_name) == null:
+			errors.append("WORLD_ENVIRONMENT_CONTAINER_MISSING: " + child_name)
 
 static func _check_main_connections(root: Node, errors: Array[String]) -> void:
 	var xr_origin := root.get_node_or_null("XROrigin3D")
