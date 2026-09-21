@@ -27,10 +27,10 @@ static func _check_xr_origin_topology(root: Node, errors: Array[String]) -> void
 		return
 
 	for side in ["left", "right"]:
-		var hand_id := "hand." + side
+		var hand_id: String = "hand." + side
 		if rig.get_attachment_point(hand_id) != null:
 			errors.append("HAND_ATTACHMENT_DUPLICATE_RUNTIME_ID:" + hand_id)
-	var expected_fingers := ["thumb", "index", "middle", "ring", "little"]
+	var expected_fingers: Array[String] = ["thumb", "index", "middle", "ring", "little"]
 	for side in ["left", "right"]:
 		for finger in expected_fingers:
 			for segment in range(1, 4):
