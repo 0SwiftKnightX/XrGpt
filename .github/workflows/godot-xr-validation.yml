@@ -16,21 +16,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Godot 4.6.1
+      - name: Install Godot 4.7
         run: |
           set -e
-          curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.6.1-stable/Godot_v4.6.1-stable_linux.x86_64.zip
+          curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
           mkdir -p /tmp/godot
           unzip -q /tmp/godot.zip -d /tmp/godot
-          GODOT_BIN="/tmp/godot/Godot_v4.6.1-stable_linux.x86_64"
+          GODOT_BIN="/tmp/godot/Godot_v4.7-stable_linux.x86_64"
           test -x "$GODOT_BIN"
           "$GODOT_BIN" --version
 
       - name: Import and parse project
-        run: /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . --editor --quit
+        run: /tmp/godot/Godot_v4.7-stable_linux.x86_64 --headless --path . --editor --quit
 
       - name: Run XR connection audit
-        run: timeout 90s /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_connection_audit_runner.tscn
+        run: timeout 90s /tmp/godot/Godot_v4.7-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_connection_audit_runner.tscn
 
       - name: Run Phase 1 attachment regression three times
-        run: timeout 90s /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_attachment_regression_runner.tscn
+        run: timeout 90s /tmp/godot/Godot_v4.7-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_attachment_regression_runner.tscn
