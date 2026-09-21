@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://gameplay/world/world_environment_root.gd" id="1_world"]
+
+[node name="WorldEnvironmentRoot" type="Node3D"]
+script = ExtResource("1_world")
+world_environment_path = NodePath("../WorldEnvironment")
+day_night_cycle_path = NodePath("../DayNightCycle")
+
+[node name="TerrainRegions" type="Node3D" parent="."]
+
+[node name="BiomeRegions" type="Node3D" parent="."]
+
+[node name="ResourceSpawns" type="Node3D" parent="."]
+
+[node name="WorldInteractionPoints" type="Node3D" parent="."]
+
+[node name="PersistentWorldData" type="Node" parent="."]
