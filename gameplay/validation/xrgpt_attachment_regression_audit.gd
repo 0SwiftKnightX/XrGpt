@@ -164,7 +164,7 @@ static func _check_controller_transactions(errors: Array[String]) -> void:
 	controller.attachment_detached.connect(func(slot_id: String, attachment_id: String): detached_signals.append(slot_id + ":" + attachment_id))
 	controller.attachment_failed.connect(func(slot_id: String, reason: String): failures.append(slot_id + ":" + reason))
 	var successes: Array[String] = []
-	controller.attachment_succeeded.connect(func(slot_id: String, attachment_id: String): successes.append(slot_id + ":" + attachment_id)
+	controller.attachment_succeeded.connect(func(slot_id: String, attachment_id: String): successes.append(slot_id + ":" + attachment_id))
 
 	if not controller.attach_slot(slot_a):
 		errors.append("INITIAL_ATTACHMENT_FAILED")
