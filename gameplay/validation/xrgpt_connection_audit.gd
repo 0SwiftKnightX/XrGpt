@@ -11,6 +11,7 @@ static func run(root: Node) -> Array[String]:
 		return errors
 	_check_catalog(errors)
 	_check_main_connections(root, errors)
+	_check_attachment_topology(root, errors)
 	_check_instance_and_runtime_contract(errors)
 	return errors
 
@@ -148,6 +149,44 @@ static func _check_main_connections(root: Node, errors: Array[String]) -> void:
 	else:
 		_check_pickup_function(right, "RIGHT", errors)
 		_check_ray_pointer(right, "RIGHT", errors)
+
+static func _check_attachment_topology(root: Node, errors: Array[String]) -> void:
+	var xr_origin := root.get_node_or_null("XROrigin3D")
+	if xr_origin == null:
+		return
+	var rig := xr_origin.get_node_or_null("PlayerRig") as XRGptPlayerRig
+	if rig == null:
+		errors.append("PLAYER_RIG_MISSING")
+		return
+	var right_hand := xr_origin.get_node_or_null("RightController/RightHandAttachment") as XRGptAttachmentPoint
+	var left_hand := xr_origin.get_node_or_null("LeftController/LeftHandAttachment") as XRGptAttachmentPoint
+	if right_hand == null or right_hand.attachment_id != "hand.right":
+		errors.append("RIGHT_HAND_ATTACHMENT_ID_INVALID")
+	elif not right_hand.slot_ids.has("01"):
+		errors.append("RIGHT_HAND_ATTACHMENT_SLOT_MAPPING_INVALID")
+	if left_hand == null or left_hand.attachment_id != "hand.left":
+		errors.append("LEFT_HAND_ATTACHMENT_ID_INVALID")
+	elif not left_hand.slot_ids.has("02"):
+		errors.append("LEFT_HAND_ATTACHMENT_SLOT_MAPPING_INVALID")
+
+	var expected_fingers := ["thumb", "index", "middle", "ring", "little"]
+	var seen_ids := {}
+	for side_name in ["left", "right"]:
+		for finger_name in expected_fingers:
+			for segment in range(1, 4):
+				var suffix := "" if segment == 1 else ".%d" % segment
+				var attachment_id := "finger.%s.%s%s" % [side_name, finger_name, suffix]
+				var point := rig.get_attachment_point(attachment_id)
+				if point == null:
+					errors.append("FINGER_ATTACHMENT_MISSING: " + attachment_id)
+					continue
+				if point.attachment_id != attachment_id:
+					errors.append("FINGER_ATTACHMENT_ID_MISMATCH: " + attachment_id)
+				if seen_ids.has(point.attachment_id):
+					errors.append("FINGER_ATTACHMENT_ID_DUPLICATE: " + point.attachment_id)
+				seen_ids[point.attachment_id] = true
+	if seen_ids.size() != 30:
+		errors.append("FINGER_ATTACHMENT_COUNT_INVALID: expected 30, got " + str(seen_ids.size()))
 
 static func _check_pickup_function(controller: XRController3D, label: String, errors: Array[String]) -> void:
 	var pickup := XRToolsFunctionPickup.find_instance(controller)
