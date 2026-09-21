@@ -108,7 +108,7 @@ static func _create_black_cube(definition: XRGptItemDefinition, instance: XRGptI
 	label.position = Vector3(0, 0.09, 0)
 	body.add_child(label)
 
-	var projectile_script = load("res://gameplay/projectiles/projectile_runtime.gd")
+	var projectile_script: Script = load("res://gameplay/projectiles/projectile_runtime.gd")
 	var projectile := Node.new()
 	projectile.name = "ProjectileRuntime"
 	projectile.set_script(projectile_script)
