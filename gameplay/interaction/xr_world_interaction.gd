@@ -148,7 +148,7 @@ func _release_held_item() -> void:
 			_origin_slot = null
 			return
 
-	if not placed and _held_item != null and _place_held_item_in_world(hit):
+	if not placed and target == null and _held_item != null and _place_held_item_in_world(hit):
 		placed = true
 
 	if not placed and _held_item != null and _origin_slot != null:
