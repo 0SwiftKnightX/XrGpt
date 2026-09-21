@@ -19,7 +19,12 @@ func attach_slot(slot: XRGptItemSlot) -> bool:
 	if slot == null or slot.item == null:
 		return false
 	var attachment: XRGptAttachmentPoint = _attachment_for_slot(slot)
-	if attachment == null or not attachment.can_attach(slot.item):
+	if attachment == null:
+		return false
+	attachment.current_slot_id = slot.slot_id
+	if not attachment.can_attach(slot.item):
+		attachment.current_slot_id = ""
+		return false
 		return false
 	detach_slot(slot)
 	var visual: Node3D = XRGptItemRuntime.spawn_instance(slot.item, attachment)
@@ -31,9 +36,11 @@ func attach_slot(slot: XRGptItemSlot) -> bool:
 		body.freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
 		body.collision_layer = 0
 		body.collision_mask = 0
-	visual.position = Vector3.ZERO
-	visual.rotation = Vector3.ZERO
+	var attachment_transform: Transform3D = attachment.get_attachment_transform()
+	visual.position = attachment_transform.origin
+	visual.basis = attachment_transform.basis
 	_attached_visuals[slot.slot_id] = visual
+	attachment.set_attachment_state(slot.slot_id, true)
 	return true
 
 func detach_slot(slot: XRGptItemSlot) -> void:
@@ -42,6 +49,9 @@ func detach_slot(slot: XRGptItemSlot) -> void:
 	var visual: Node3D = _attached_visuals.get(slot.slot_id) as Node3D
 	if visual != null and is_instance_valid(visual):
 		visual.queue_free()
+	var attachment: XRGptAttachmentPoint = _attachment_for_slot(slot)
+	if attachment != null:
+		attachment.set_attachment_state(slot.slot_id, false)
 	_attached_visuals.erase(slot.slot_id)
 
 func _attachment_for_slot(slot: XRGptItemSlot) -> XRGptAttachmentPoint:
