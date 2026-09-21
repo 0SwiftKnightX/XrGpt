@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="XRGptAttachmentProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://gameplay/equipment/attachment_profile.gd" id="1_profile"]
+
+[resource]
+script = ExtResource("1_profile")
+attachment_types = ["Hand"]
+preferred_sides = ["Right"]
+allowed_attachment_ids = ["hand.right"]
+position_offset = Vector3(0, 0, 0)
+rotation_offset_degrees = Vector3(0, 0, 0)
+scale_multiplier = Vector3(1, 1, 1)
