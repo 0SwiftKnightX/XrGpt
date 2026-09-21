@@ -101,3 +101,67 @@ GPT work log continuation
 
 
 - 2026-09-21T03:xx:xxZ — GPT Tech 3 / XR QA & Continuity: reviewed the failed validation annotations. The Node.js 20 deprecation and Ubuntu 26 migration messages are GitHub Actions environment warnings/notices, not the reported validation failure itself. Updated `.github/workflows/godot-xr-validation.yml` from `actions/checkout@v4` to `actions/checkout@v5` to remove the known Node 20 checkout-action warning path. Kept `ubuntu-latest` unchanged because it is an environment notice rather than the cause of the failing Godot validation. Commit: 91c213e919979f3ee1965e7a8b62b01ea9ec7786. Validation certification remains pending the next completed run. — GPT Tech 3 / XR QA & Continuity
+
+
+## Pre-Quest 3S Test-Readiness Checklist
+This is the gate before taking the current build to the physical Meta Quest 3S. Static inspection alone does not mark physical tests complete.
+
+### A. Repository / CI gate
+- [ ] Latest GitHub Actions run completes without GDScript parse/runtime errors.
+- [ ] XR connection audit reaches audit_begin and audit_end and reports PASS.
+- [ ] Phase 1 attachment regression reports PASS_1, PASS_2, and PASS_3 from real executed audits.
+- [ ] CI process exits with code 0.
+- [ ] Headless OpenXR/no-HMD warnings are distinguished from actual project errors.
+
+### B. Godot project gate
+- [ ] Project imports and parses cleanly in Godot 4.6.1.
+- [ ] Main scene loads without parser/runtime errors.
+- [ ] StartXR remains the real device startup path.
+- [ ] XROrigin3D, camera, left controller, right controller, and XR Tools pickup functions are connected.
+- [ ] Creative Item Index resolves Rock, Stone, and BLACK CUBE from the authoritative catalog.
+- [ ] Generated items have visual geometry, collision, XR-pickable behavior, and the same XRGptItemInstance.
+- [ ] Inventory → world → pickup → inventory preserves ownership and instance identity with no duplicates.
+
+### C. Attachment / equipment gate
+- [ ] Right and left hand attachment points exist with unique IDs.
+- [ ] All 30 dynamic finger-segment attachment identities exist: 5 fingers × 2 hands × 3 segments.
+- [ ] Ring attaches to the right ring-finger target and is rejected by incompatible targets.
+- [ ] Glove attaches to the compatible hand target and is rejected by incompatible finger targets.
+- [ ] Occupied exclusive attachment reports the correct failure without stealing/overwriting ownership.
+- [ ] Attach → detach → reattach works without stale current_slot_id or duplicate ownership.
+- [ ] Failed visual creation restores the previous valid attachment state.
+- [ ] Failed equipment placement does not strand an item in the equipment slot.
+- [ ] Attachment success/failure/detach lifecycle signals emit correctly.
+- [ ] Both controllers and all intended dynamic finger attachment paths are covered.
+
+### D. Physical XR smoke test — Meta Quest 3S
+- [ ] Install the candidate APK on the Quest 3S.
+- [ ] App launches into the intended XR scene and OpenXR initializes on the physical headset.
+- [ ] Head tracking and both controller poses are correct.
+- [ ] Left-hand pickup works.
+- [ ] Right-hand pickup works.
+- [ ] Trigger ray points and targets correctly across intended interaction layers.
+- [ ] Creative buttons can be targeted and activated with the intended trigger.
+- [ ] Create Rock, Stone, and BLACK CUBE and verify inventory placement.
+- [ ] Grip/release generated physical items with both controllers.
+- [ ] Place an inventory-held item into the world.
+- [ ] Re-pick it up and confirm the same item returns to inventory.
+- [ ] BLACK CUBE same-hand grip + trigger throw works.
+- [ ] BLACK CUBE opposite-hand grip + trigger directional projectile launch works.
+- [ ] Ring → right ring finger works.
+- [ ] Glove → right hand works.
+- [ ] Incompatible attachment is rejected with no state loss.
+- [ ] Occupied attachment leaves the existing item intact.
+- [ ] Detach → reattach works.
+- [ ] Repeat critical attachment sequences at least 3 times to catch intermittent state/ownership defects.
+
+### E. Evidence / release gate
+- [ ] Record the exact first Godot/Quest error before making another code change.
+- [ ] Record controller, hand, item, attachment point, and action for each failure.
+- [ ] Confirm no duplicate physical item or inventory instance appears after repeated pickup/placement.
+- [ ] Confirm no stale attachment ownership remains after detach or failed replacement.
+- [ ] Confirm no visible runtime errors or broken XR interaction paths during the smoke test.
+- [ ] Only after the physical checks pass: produce the Android build as the candidate test/release artifact.
+- [ ] Do not call the project Quest-validated until the physical Quest 3S checklist has actually been executed.
+
+- 2026-09-21T23:xx:xxZ — GPT Tech 3 / XR QA & Continuity: Read the complete README and appended the Pre-Quest 3S Test-Readiness Checklist. It consolidates the existing CI connection audit, three-pass Phase 1 regression, Godot 4.6.1 gate, inventory/physical-object round-trip, transactional attachment safeguards, both-controller coverage, all dynamic finger identities, and required physical Meta Quest 3S smoke tests. It explicitly separates headless CI limitations from real-device validation and requires evidence before Quest validation is claimed. Existing README history was preserved; this entry is append-only. — GPT Tech 3 / XR QA & Continuity
