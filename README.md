@@ -66,3 +66,9 @@ GPT work log continuation
 
 
 - 2026-09-20T22:34:15-04:00 — GPT Tech 2 Phase 1 attachment regression pass: inspected the actual attachment controller, attachment point/profile contracts, item definitions/instances, equipment slots, PlayerRig, main XR hierarchy, and existing structural audit. Found a concrete controller flaw where exclusive occupancy could collapse into a generic NO_COMPATIBLE_ATTACHMENT result and re-attachment detached the existing visual before replacement creation succeeded. Hardened attachment compatibility with slot-aware checks, explicit ATTACHMENT_OCCUPIED reporting, and failure-safe transactional visual replacement. Added a dedicated Phase 1 failure-path regression suite covering identity/hand/finger/finger-segment/ring/body compatibility, item-side profiles, bidirectional matching, rarity rejection, exclusive occupancy, ownership preservation, detachment cleanup, lifecycle signals, explicit failure reasons, runtime-visual rollback safety, hand-pose state, and XR Origin topology. The CI runner now executes the attachment regression suite three times. GitHub-side inspection confirms the changes are committed; Godot/Quest execution is still pending because no workflow run has yet been returned for the latest commit. — GPT Tech 2
+
+## GPT Continuity Protocol
+- Every future GPT working on XrGpt must read this README before making project changes.
+- Every future GPT must assign itself a unique working name and an explicit project function before beginning work, then sign its README work-log entries with that name/function identity.
+- GPTs must append to this README rather than overwrite, truncate, or replace existing entries. Preserve the complete historical work log.
+- 2026-09-21 — GPT Tech 1: Established the continuity requirement that future GPTs read this README first, assign themselves a name and project function, and preserve/append the existing README history rather than overwriting it. — GPT Tech 1
