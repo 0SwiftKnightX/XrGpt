@@ -86,7 +86,7 @@ camera_path = NodePath("../XRCamera3D")
 
 [node name="AttachmentController" type="Node3D" parent="XROrigin3D"]
 script = ExtResource("14")
-attachment_root_path = NodePath("../PlayerRig")
+attachment_root_path = NodePath("..")
 
 [node name="ActiveEquipmentController" parent="XROrigin3D" instance=ExtResource("7")]
 camera_path = NodePath("../XRCamera3D")
