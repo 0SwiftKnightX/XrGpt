@@ -12,6 +12,7 @@ static func run(root: Node) -> Array[String]:
 	_check_catalog(errors)
 	_check_main_connections(root, errors)
 	_check_world_environment_foundation(root, errors)
+	_check_world_data_contracts(errors)
 	_check_attachment_topology(root, errors)
 	_check_instance_and_runtime_contract(errors)
 	return errors
@@ -107,6 +108,25 @@ static func _check_world_environment_foundation(root: Node, errors: Array[String
 	for child_name in required_children:
 		if world_root.get_node_or_null(child_name) == null:
 			errors.append("WORLD_ENVIRONMENT_CONTAINER_MISSING: " + child_name)
+
+static func _check_world_data_contracts(errors: Array[String]) -> void:
+	var region := XRGptWorldRegionDefinition.new()
+	region.region_id = "audit.region"
+	region.display_name = "Audit Region"
+	region.coordinates = Vector2i(0, 0)
+	region.region_size_meters = Vector2(64.0, 64.0)
+	if not region.is_valid():
+		errors.append("WORLD_REGION_DEFINITION_INVALID")
+	if not region.contains_local_position(Vector3.ZERO):
+		errors.append("WORLD_REGION_CONTAINS_CENTER_INVALID")
+	if region.contains_local_position(Vector3(32.0, 0.0, 0.0)):
+		errors.append("WORLD_REGION_BOUNDARY_INVALID")
+
+	var biome := XRGptBiomeDefinition.new()
+	biome.biome_id = "audit.biome"
+	biome.display_name = "Audit Biome"
+	if not biome.is_valid():
+		errors.append("BIOME_DEFINITION_INVALID")
 
 static func _check_main_connections(root: Node, errors: Array[String]) -> void:
 	var xr_origin := root.get_node_or_null("XROrigin3D")
