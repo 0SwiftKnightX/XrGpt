@@ -21,8 +21,8 @@ func setup(definition: XRGptItemDefinition, owner: String, amount: int = 1) -> v
 	if definition == null or definition.item_id.is_empty():
 		definition_id = ""
 		return
-	instance_id = _make_instance_id(owner)
 	definition_id = definition.item_id
+	instance_id = _make_instance_id(owner)
 	display_name = definition.display_name
 	category = definition.category
 	rarity = definition.rarity
