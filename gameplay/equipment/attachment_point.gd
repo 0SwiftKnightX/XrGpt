@@ -54,7 +54,10 @@ func can_attach_for_slot(instance: XRGptItemInstance, candidate_slot_id: String)
 	var definition: XRGptItemDefinition = XRGptItemCatalog.find_definition(instance.definition_id)
 	if definition == null or definition.attachment_profile == null:
 		return false
-	return definition.attachment_profile.accepts_point(self)
+	var profile := definition.attachment_profile as XRGptAttachmentProfile
+	if profile == null:
+		return false
+	return profile.accepts_point(self)
 
 func set_attachment_state(slot_id: String, occupied: bool) -> void:
 	current_slot_id = slot_id if occupied else ""
@@ -70,5 +73,7 @@ func get_attachment_transform(instance: XRGptItemInstance = null) -> Transform3D
 	if instance != null:
 		var definition: XRGptItemDefinition = XRGptItemCatalog.find_definition(instance.definition_id)
 		if definition != null and definition.attachment_profile != null:
-			result = result * definition.attachment_profile.get_transform()
+			var profile := definition.attachment_profile as XRGptAttachmentProfile
+			if profile != null:
+				result = result * profile.get_transform()
 	return result
