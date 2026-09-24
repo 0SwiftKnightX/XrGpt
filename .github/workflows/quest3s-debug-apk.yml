@@ -9,7 +9,7 @@ permissions:
 jobs:
   export:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -26,21 +26,25 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -n "${ANDROID_HOME:-}"
+          test -n "$ANDROID_HOME"
           test -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" || test -x "$ANDROID_HOME/tools/bin/sdkmanager"
           echo "ANDROID_HOME=$ANDROID_HOME"
-          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --version 2>/dev/null || "${ANDROID_HOME}/tools/bin/sdkmanager" --version
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --version 2>/dev/null || "$ANDROID_HOME/tools/bin/sdkmanager" --version
 
       - name: Install Android SDK packages
         shell: bash
         run: |
           set -euo pipefail
-          SDKMANAGER="${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           if [ ! -x "$SDKMANAGER" ]; then
-            SDKMANAGER="${ANDROID_HOME}/tools/bin/sdkmanager"
+            SDKMANAGER="$ANDROID_HOME/tools/bin/sdkmanager"
           fi
           yes | "$SDKMANAGER" --licenses >/dev/null || true
-          "$SDKMANAGER" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          "$SDKMANAGER" "platform-tools" "platforms;android-35" "build-tools;35.0.1" "cmdline-tools;latest" "cmake;3.10.2.4988404" "ndk;28.1.13356709"
+          test -x "$ANDROID_HOME/platform-tools/adb"
+          test -d "$ANDROID_HOME/build-tools/35.0.1"
+          test -d "$ANDROID_HOME/ndk/28.1.13356709"
+          test -d "$ANDROID_HOME/cmake/3.10.2.4988404"
 
       - name: Install Godot 4.6.1
         shell: bash
@@ -51,6 +55,13 @@ jobs:
           unzip -q /tmp/godot.zip -d /tmp/godot
           chmod +x /tmp/godot/Godot_v4.6.1-stable_linux.x86_64
           /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --version
+
+      - name: Install Godot Android Gradle build template
+        shell: bash
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . --editor --install-android-build-template
+          test -d android
 
       - name: Install matching Godot export templates
         shell: bash
