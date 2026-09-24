@@ -23,5 +23,7 @@ extends Resource
 @export var stealable: bool = false
 
 @export_category("Attachment")
-## Item-side attachment contract. A null profile means the item is not attachable.
-@export var attachment_profile: XRGptAttachmentProfile
+## Keep this property Resource-typed to avoid a script-class cycle:
+## ItemDefinition -> AttachmentProfile -> AttachmentPoint -> ItemDefinition.
+## Consumers cast it to XRGptAttachmentProfile at the system boundary.
+@export var attachment_profile: Resource
