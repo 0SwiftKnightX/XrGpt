@@ -43,8 +43,8 @@ jobs:
         run: |
           set -euo pipefail
           /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . --editor --quit 2>&1 | tee /tmp/godot-import.log
-          if grep -Eiq 'SCRIPT ERROR|Parse Error|Parser Error|Invalid call|GDScript\.new' /tmp/godot-import.log; then
-            echo "::error::Godot import/parse reported a script or parser error."
+          if grep -Eiq 'SCRIPT ERROR|Parse Error|Parser Error|Invalid call|GDScript\.new|Failed loading resource|Failed to load script' /tmp/godot-import.log; then
+            echo "::error::Godot import/parse reported a script, parser, or resource-loading error."
             exit 1
           fi
 
@@ -80,8 +80,8 @@ jobs:
           set -euo pipefail
           /usr/bin/timeout 60s /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_inventory_architecture_runner.tscn 2>&1 | tee /tmp/inventory-architecture-audit.log
           grep -Fq 'XRGPT_INVENTORY_ARCHITECTURE_AUDIT: PASS' /tmp/inventory-architecture-audit.log
-          if grep -Eiq 'SCRIPT ERROR|Parse Error|Parser Error|Invalid call|GDScript\.new|XRGPT_INVENTORY_ARCHITECTURE_AUDIT: FAIL' /tmp/inventory-architecture-audit.log; then
-            echo "::error::Inventory architecture audit reported an execution or architecture failure."
+          if grep -Eiq 'SCRIPT ERROR|Parse Error|Parser Error|Invalid call|GDScript\.new|Failed loading resource|Failed to load script|XRGPT_INVENTORY_ARCHITECTURE_AUDIT: FAIL' /tmp/inventory-architecture-audit.log; then
+            echo "::error::Inventory architecture audit reported an execution, resource-loading, or architecture failure."
             exit 1
           fi
 
@@ -93,8 +93,9 @@ jobs:
             echo "## Godot XR Validation"
             echo ""
             echo "- Godot: 4.6.1"
-            echo "- XR connection audit: required `audit_begin` + `audit_end` + PASS"
+            echo "- XR connection audit: required audit_begin + audit_end + PASS"
             echo "- Phase 1 attachment regression: required PASS_1 + PASS_2 + PASS_3"
+            echo "- Inventory architecture audit: required XRGPT_INVENTORY_ARCHITECTURE_AUDIT: PASS with no script/resource errors"
             echo "- Checkout action: actions/checkout@v5 (Node 24)"
             echo "- Validation evidence: uploaded as a workflow artifact"
             echo "- Build provenance: attestation required on successful validation"
