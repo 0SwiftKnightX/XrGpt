@@ -6,7 +6,9 @@ extends Resource
 @export var display_name: String = ""
 @export var category: String = "Misc"
 @export var subcategory: String = ""
-@export var capabilities: Array[String] = [XRGptItemCapability.INSPECTABLE]
+## Keep the default capability data literal so this definition resource does not
+## introduce an unnecessary global-class initialization dependency during import.
+@export var capabilities: Array[String] = ["inspectable"]
 @export var rarity: String = "Common"
 @export_multiline var description: String = ""
 
