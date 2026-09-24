@@ -5,6 +5,8 @@ extends Resource
 @export var item_id: String = ""
 @export var display_name: String = ""
 @export var category: String = "Misc"
+@export var subcategory: String = ""
+@export var capabilities: Array[String] = [XRGptItemCapability.INSPECTABLE]
 @export var rarity: String = "Common"
 @export_multiline var description: String = ""
 

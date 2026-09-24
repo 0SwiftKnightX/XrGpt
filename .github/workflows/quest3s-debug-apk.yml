@@ -1,0 +1,89 @@
+name: Quest 3S Debug APK
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install Java 17
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk unzip
+          java -version
+
+      - name: Verify Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${ANDROID_HOME:-}"
+          test -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" || test -x "$ANDROID_HOME/tools/bin/sdkmanager"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --version 2>/dev/null || "${ANDROID_HOME}/tools/bin/sdkmanager" --version
+
+      - name: Install Android SDK packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDKMANAGER="${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then
+            SDKMANAGER="${ANDROID_HOME}/tools/bin/sdkmanager"
+          fi
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Install Godot 4.6.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.6.1-stable/Godot_v4.6.1-stable_linux.x86_64.zip
+          mkdir -p /tmp/godot
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.6.1-stable_linux.x86_64
+          /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --version
+
+      - name: Install matching Godot export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.6.1.stable"
+          curl -L --fail --retry 3 -o /tmp/templates.tpz https://github.com/godotengine/godot/releases/download/4.6.1-stable/Godot_v4.6.1-stable_export_templates.tpz
+          unzip -q /tmp/templates.tpz -d /tmp/templates
+          cp -R /tmp/templates/templates/. "$HOME/.local/share/godot/export_templates/4.6.1.stable/"
+          test -f "$HOME/.local/share/godot/export_templates/4.6.1.stable/android_debug.apk"
+
+      - name: Create ephemeral debug keystore
+        shell: bash
+        run: |
+          set -euo pipefail
+          keytool -genkeypair -v -keystore /tmp/xrgpt-debug.keystore -alias xrgpt -keyalg RSA -keysize 2048 -validity 10000 -storepass xrgptdebug -keypass xrgptdebug -dname "CN=XrGpt Debug,O=0SwiftKnightX,C=US"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=/tmp/xrgpt-debug.keystore" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=xrgpt" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=xrgptdebug" >> "$GITHUB_ENV"
+
+      - name: Export Quest 3S debug APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . --editor --quit
+          /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . --export-debug "Meta Quest 3S" build/xrgpt-quest3s-debug.apk
+          test -s build/xrgpt-quest3s-debug.apk
+
+      - name: Upload Quest 3S debug APK
+        uses: actions/upload-artifact@v6
+        with:
+          name: xrgpt-quest3s-debug-apk
+          path: build/xrgpt-quest3s-debug.apk
+          if-no-files-found: error
+          retention-days: 14
