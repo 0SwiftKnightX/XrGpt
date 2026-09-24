@@ -74,6 +74,17 @@ jobs:
             exit 1
           fi
 
+      - name: Run inventory architecture audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/timeout 60s /tmp/godot/Godot_v4.6.1-stable_linux.x86_64 --headless --path . res://gameplay/validation/xrgpt_inventory_architecture_runner.tscn 2>&1 | tee /tmp/inventory-architecture-audit.log
+          grep -Fq 'XRGPT_INVENTORY_ARCHITECTURE_AUDIT: PASS' /tmp/inventory-architecture-audit.log
+          if grep -Eiq 'SCRIPT ERROR|Parse Error|Parser Error|Invalid call|GDScript\.new|XRGPT_INVENTORY_ARCHITECTURE_AUDIT: FAIL' /tmp/inventory-architecture-audit.log; then
+            echo "::error::Inventory architecture audit reported an execution or architecture failure."
+            exit 1
+          fi
+
       - name: Publish validation summary
         if: always()
         shell: bash
@@ -97,10 +108,12 @@ jobs:
           test -f /tmp/godot-import.log
           test -f /tmp/xr-connection-audit.log
           test -f /tmp/attachment-regression.log
+          test -f /tmp/inventory-architecture-audit.log
           tar -czf /tmp/xr-validation-evidence.tar.gz \
             /tmp/godot-import.log \
             /tmp/xr-connection-audit.log \
-            /tmp/attachment-regression.log
+            /tmp/attachment-regression.log \
+            /tmp/inventory-architecture-audit.log
           test -s /tmp/xr-validation-evidence.tar.gz
 
       - name: Upload validation evidence
