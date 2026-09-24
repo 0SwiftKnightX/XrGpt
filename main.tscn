@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://cqow47bch5ocs"]
+[gd_scene load_steps=18 format=3 uid="uid://cqow47bch5ocs"]
 
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://dqilakjuye5cy" path="res://player 1.tscn" id="2"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" path="res://gameplay/equipment/attachment_point.gd" id="15"]
 [ext_resource type="PackedScene" path="res://gameplay/test_items/black_cube_test.tscn" id="11"]
 [ext_resource type="PackedScene" path="res://gameplay/creative/creative_item_index.tscn" id="12"]
+[ext_resource type="PackedScene" path="res://gameplay/world/world_environment_root.tscn" id="16"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_horizon_color = Color(0.12, 0.15, 0.2, 1)
@@ -61,6 +62,8 @@ player_origin_path = NodePath("../XROrigin3D")
 start_xr_path = NodePath("../StartXR")
 spawn_position = Vector3(0, 0, 0.8)
 spawn_rotation_degrees = Vector3(0, 0, 0)
+
+[node name="WorldEnvironmentRoot" parent="." instance=ExtResource("16")]
 
 [node name="DayNightCycle" type="Node3D" parent="."]
 script = ExtResource("9")
