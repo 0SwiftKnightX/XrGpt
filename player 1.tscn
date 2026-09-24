@@ -6,6 +6,11 @@
 [ext_resource type="Script" path="res://gameplay/interaction/xr_ray_pointer.gd" id="4_ray"]
 [ext_resource type="PackedScene" uid="uid://btknduttnmoxf" path="res://addons/godot-xr-tools/misc/vr_common_shader_cache.tscn" id="5_shader_cache"]
 [ext_resource type="PackedScene" path="res://gameplay/player/player_rig.tscn" id="6_rig"]
+[ext_resource type="PackedScene" path="res://addons/godot-xr-tools/player/player_body.tscn" id="7_player_body"]
+[ext_resource type="PackedScene" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="8_move_direct"]
+[ext_resource type="PackedScene" path="res://addons/godot-xr-tools/functions/movement_turn.tscn" id="9_move_turn"]
+[ext_resource type="PackedScene" path="res://addons/godot-xr-tools/functions/movement_jump.tscn" id="10_move_jump"]
+[ext_resource type="PackedScene" path="res://addons/godot-xr-tools/functions/movement_sprint.tscn" id="11_move_sprint"]
 
 [sub_resource type="CylinderMesh" id="RayMesh"]
 top_radius = 0.006
@@ -39,11 +44,27 @@ transparency = 1
 
 [node name="PlayerRig" parent="." instance=ExtResource("6_rig")]
 
+[node name="PlayerBody" parent="." instance=ExtResource("7_player_body")]
+player_radius = 0.3
+player_height_min = 1.4
+player_height_max = 2.2
+
+[node name="MovementSprint" parent="." instance=ExtResource("11_move_sprint")]
+sprint_type = 0
+sprint_speed_multiplier = 1.8
+controller = 0
+sprint_button = "primary_click"
+
 [node name="LeftController" type="XRController3D" parent="."]
 tracker = &"left_hand"
 pose = &"default"
 
 [node name="LeftHand" parent="LeftController" instance=ExtResource("1_left_hand")]
+
+[node name="MovementDirect" parent="LeftController" instance=ExtResource("8_move_direct")]
+max_speed = 3.0
+strafe = true
+input_action = "primary"
 
 [node name="LeftPickup" parent="LeftController" instance=ExtResource("3_pickup")]
 
@@ -52,6 +73,16 @@ tracker = &"right_hand"
 pose = &"default"
 
 [node name="RightHand" parent="RightController" instance=ExtResource("2_right_hand")]
+
+[node name="MovementTurn" parent="RightController" instance=ExtResource("9_move_turn")]
+turn_mode = 0
+smooth_turn_speed = 2.0
+step_turn_delay = 0.2
+step_turn_angle = 45.0
+input_action = "primary"
+
+[node name="MovementJump" parent="RightController" instance=ExtResource("10_move_jump")]
+jump_button_action = "ax_button"
 
 [node name="RightPickup" parent="RightController" instance=ExtResource("3_pickup")]
 
